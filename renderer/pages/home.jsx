@@ -55,6 +55,10 @@ function Home() {
     }
   }
 
+  const onSetPosition= (position)=>{
+    peerManager.setCameraPosition(position)
+  }
+
   const onSelectWallpaper = (wallpaper) => {
     if (state.selectedDevice) {
       setGraphics(() => ({
@@ -130,7 +134,7 @@ function Home() {
         <QualityController isDeviceSelected={state.selectedDevice ? true : false} onQualitySelect={onQualitySelect} />
         <Overlays overlays={graphics.overlays} onSelectOverlay={onSelectOverlay} />
         <Wallpapers wallpapers={graphics.wallpapers} onSelectWallpaper={onSelectWallpaper}  />
-        <WebcamController state={state} onStartWebCam={onStartWebCam} onStopWebCam={onStopWebCam} />
+        <WebcamController state={state} onStartWebCam={onStartWebCam} onStopWebCam={onStopWebCam} onSetPosition={onSetPosition}/>
         <Devices devices={state.devices} onLoadDevice={onLoadDevice} />
         <Player state={state} onStartStream={onStartStream} onStopStream={onStopStream} canvasRef={canvasRef} />
       </Content>

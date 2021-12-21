@@ -42,8 +42,8 @@ export const PeerManager = (function () {
                         context.fillRect(0, 0, peer.canvasEl.width, peer.canvasEl.height);
                     }
                     context.drawImage(remoteVideoEl.preview, 0, (360 - 288) / 2, peer.canvasEl.width, 288);
-                    if (camera.preview) {
-                        context.drawImage(camera.preview, 0, (peer.canvasEl.height - 135), 210, 135);
+                    if (camera.stream?.active) {
+                        context.drawImage(camera.preview, peer.positionX, peer.positionY, 160, 90);
                     }
                 }
                 break;
@@ -52,7 +52,7 @@ export const PeerManager = (function () {
                     if (peer.imageEl) {
                         context.drawImage(peer.imageEl, 0, 0, peer.canvasEl.width, peer.canvasEl.height);
                         context.drawImage(remoteVideoEl.preview, peer.overlay.coordinates.feed.x, peer.overlay.coordinates.feed.y, peer.canvasEl.width / peer.overlay.coordinates.feed.width, peer.canvasEl.height / peer.overlay.coordinates.feed.height);
-                        if (camera.preview) {
+                        if (camera.stream?.active) {
                             context.drawImage(camera.preview, peer.overlay.coordinates.camera.x, peer.overlay.coordinates.camera.y, peer.overlay.coordinates.camera.width, peer.overlay.coordinates.camera.height);
                         }
                     }
@@ -280,12 +280,33 @@ export const PeerManager = (function () {
             peer.imageElwallpaper.src = wallpaper.url
         },
 
+        setCameraPosition: (position) => {
+            switch (position) {
+                case "left-bottom":
+                    peer.positionY = (peer.canvasEl.height - 90);
+                    peer.positionX = 0;
+                    break;
+                case "left-top":
+                    peer.positionY = 0;
+                    peer.positionX = 0;
+                    break;
+                case "right-top":
+                    peer.positionX = (peer.canvasEl.width - 160);
+                    peer.positionY = 0
+                    break;
+                case "right-bottom":
+                    peer.positionX = (peer.canvasEl.width - 160);
+                    peer.positionY = (peer.canvasEl.height - 90);
+                    break;
+            }
+            peer.position = position
+        },
 
         startCamera: () => {
             var mediaConfig = {
                 audio: {
                     mandatory: {
-                        echoCancellation: false, 
+                        echoCancellation: false,
                         googAutoGainControl: true,
                         googNoiseSuppression: true,
                         googHighpassFilter: true,
@@ -306,6 +327,8 @@ export const PeerManager = (function () {
             return requestUserMedia(mediaConfig)
                 .then(function (stream) {
                     attachMediaStream(camera.preview, stream);
+                    peer.positionY = (peer.canvasEl.height - 90);
+                    peer.positionX = 0
                     camera.stream = stream;
                     localAudioSource = audioContext.createMediaStreamSource(camera.stream);
                     localAudioSource.connect(mediaSourceAudioDestinationNode);
@@ -314,9 +337,9 @@ export const PeerManager = (function () {
         },
 
         stopCamera: () => {
-            for (var track in camera.stream.getTracks()) {
-                track.stop();
-            }
+            camera.stream.getTracks().forEach(function (t) {
+                t.stop();
+            });
         },
 
         selectScence: (selectedScence, src) => {

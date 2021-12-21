@@ -9,7 +9,7 @@ const QualityController = ({isDeviceSelected, onQualitySelect}) => {
             {isDeviceSelected &&
                 <Select
                     onSelect={onQualitySelect}
-                    placeholder="Select a person"
+                    placeholder="Stream Qulaity"
                     defaultValue={750000}
                 >
                     <Option value={2500000}>Ultra max</Option>
