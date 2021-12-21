@@ -1,16 +1,21 @@
 import io from 'socket.io-client';
-import { attachMediaStream,requestUserMedia } from './adapter';
+import { attachMediaStream, requestUserMedia } from './adapter';
 import Emitter from "./Emitter";
 export const PeerManager = (function () {
     // var localId,
-    var peerDatabase = {}, animationId, localId, mediaRecorder, qualityLevel, peer, camera = {}, socket = io("http://localhost:3001")
+    var peerDatabase = {}, scence = {
+        current: "main"
+    }, animationId, localId, mediaRecorder, qualityLevel, peer, remoteVideoEl = {}, camera = {}, localAudioSource = {}, scenceAudioSource = {}, remoteAudioSource = {}, socket = io("http://localhost:3001")
 
     socket.on('message', handleMessage);
     socket.on('id', function (id) {
         localId = id;
     });
 
-    function roundedImage(ctx,x,y,width,height,radius){
+    const audioContext = new AudioContext();
+    const mediaSourceAudioDestinationNode = new MediaStreamAudioDestinationNode(audioContext);
+
+    function roundedImage(ctx, x, y, width, height, radius) {
         ctx.beginPath();
         ctx.moveTo(x + radius, y);
         ctx.lineTo(x + width - radius, y);
@@ -22,23 +27,42 @@ export const PeerManager = (function () {
         ctx.lineTo(x, y + radius);
         ctx.quadraticCurveTo(x, y, x + radius, y);
         ctx.closePath();
-      }
+    }
 
     const updateCanvas = function () {
         var context = peer.canvasEl.getContext('2d', { alpha: false });
-        if (!peer.remoteVideoEl.paused && !peer.remoteVideoEl.ended) {
-            if (peer.imageEl) {
-                context.drawImage(peer.imageEl, 0, 0, peer.imageEl.width / 2, peer.imageEl.height / 2);
-                // roundedImage(context,peer.overlay.coordinates.feed.x, peer.overlay.coordinates.feed.y, peer.canvasEl.width / peer.overlay.coordinates.feed.width, peer.canvasEl.height / peer.overlay.coordinates.feed.height,10);
-                // context.clip();
-                context.drawImage(peer.remoteVideoEl, peer.overlay.coordinates.feed.x, peer.overlay.coordinates.feed.y, peer.canvasEl.width / peer.overlay.coordinates.feed.width, peer.canvasEl.height / peer.overlay.coordinates.feed.height);
-                if (camera.preview) {
-                    context.drawImage(camera.preview, peer.overlay.coordinates.camera.x, peer.overlay.coordinates.camera.y, peer.overlay.coordinates.camera.width, peer.overlay.coordinates.camera.height);
-                }
-            } else {
-                context.drawImage(peer.remoteVideoEl, 0, 0, peer.canvasEl.width, peer.canvasEl.height);
-            }
 
+        switch (scence.current) {
+            case "main":
+                if (!remoteVideoEl.preview.paused && !remoteVideoEl.preview.ended) {
+                    if (peer.imageElwallpaper) {
+                        context.drawImage(peer.imageElwallpaper, 0, 0, peer.canvasEl.width, peer.canvasEl.height);
+                    } else {
+                        context.fillStyle = "#000000";
+                        context.fillRect(0, 0, peer.canvasEl.width, peer.canvasEl.height);
+                    }
+                    context.drawImage(remoteVideoEl.preview, 0, (360 - 288) / 2, peer.canvasEl.width, 288);
+                    if (camera.preview) {
+                        context.drawImage(camera.preview, 0, (peer.canvasEl.height - 135), 210, 135);
+                    }
+                }
+                break;
+            case "overlay":
+                if (!remoteVideoEl.preview.paused && !remoteVideoEl.preview.ended) {
+                    if (peer.imageEl) {
+                        context.drawImage(peer.imageEl, 0, 0, peer.canvasEl.width, peer.canvasEl.height);
+                        context.drawImage(remoteVideoEl.preview, peer.overlay.coordinates.feed.x, peer.overlay.coordinates.feed.y, peer.canvasEl.width / peer.overlay.coordinates.feed.width, peer.canvasEl.height / peer.overlay.coordinates.feed.height);
+                        if (camera.preview) {
+                            context.drawImage(camera.preview, peer.overlay.coordinates.camera.x, peer.overlay.coordinates.camera.y, peer.overlay.coordinates.camera.width, peer.overlay.coordinates.camera.height);
+                        }
+                    }
+                }
+                break;
+            case "starting":
+            case "ending":
+            case "break":
+                context.drawImage(scence.preview, 0, 0, peer.canvasEl.width, peer.canvasEl.height);
+                break;
         }
         animationId = requestAnimationFrame(updateCanvas);
     }
@@ -57,7 +81,17 @@ export const PeerManager = (function () {
         };
 
         peer.pc.onaddstream = function (event) {
-            attachMediaStream(peer.remoteVideoEl, event.stream);
+            remoteVideoEl.preview = document.createElement('video');
+            remoteVideoEl.preview.controls = false;
+            remoteVideoEl.preview.autoplay = true;
+            remoteVideoEl.preview.muted = "muted";
+            remoteVideoEl.stream = event.stream;
+            attachMediaStream(remoteVideoEl.preview, event.stream);
+            if (Object.keys(scenceAudioSource).length > 0) {
+                scenceAudioSource?.disconnect();
+            }
+            remoteAudioSource = audioContext.createMediaStreamSource(event.stream);
+            remoteAudioSource.connect(mediaSourceAudioDestinationNode);
             animationId = requestAnimationFrame(updateCanvas);
             Emitter.emit("canvas-status", {
                 canvasEnabled: true
@@ -75,8 +109,6 @@ export const PeerManager = (function () {
                     var context = peer.canvasEl.getContext('2d', { alpha: false });
                     context.clearRect(0, 0, peer.canvasEl.width, peer.canvasEl.height);
                     delete peerDatabase[remoteId];
-
-
                     if (peer.isStreaming) {
                         if (mediaRecorder) {
                             if (mediaRecorder.state !== "inactive") {
@@ -175,8 +207,23 @@ export const PeerManager = (function () {
             socket.emit("startstream", (status) => {
                 peer.isStreaming = true;
                 if (status) {
-                    const mediaStream = canvasRef.current.captureStream(60); // 30 FPS
-                    mediaRecorder = new MediaRecorder(mediaStream, {
+
+                    var outputStreams = [];
+
+                    const videoOutputStream = canvasRef.current.captureStream(60); // 30 FPS
+
+                    outputStreams.push(videoOutputStream);
+                    outputStreams.push(mediaSourceAudioDestinationNode.stream)
+
+                    const outputStream = new MediaStream();
+
+                    outputStreams.forEach(function (s) {
+                        s.getTracks().forEach(function (t) {
+                            outputStream.addTrack(t);
+                        });
+                    });
+
+                    mediaRecorder = new MediaRecorder(outputStream, {
                         mimeType: 'video/webm;codecs=h264',
                         videoBitsPerSecond: qualityLevel
                     });
@@ -196,7 +243,9 @@ export const PeerManager = (function () {
 
         stopStream: () => {
             peer.isStreaming = false;
-            mediaRecorder.stop();
+            if (mediaRecorder.state !== "inactive") {
+                mediaRecorder.stop();
+            }
             socket.emit("stopstream");
             Emitter.emit("stream-status", {
                 streamEnabled: false
@@ -222,25 +271,44 @@ export const PeerManager = (function () {
                 peer.imageEl = document.createElement('img');
             }
             peer.imageEl.src = peer.overlay.url
-            peer.canvasEl.width = peer.imageEl.width / 2
-            peer.canvasEl.height = peer.imageEl.height / 2
         },
+
+        setWallpaper: (wallpaper) => {
+            if (!peer.imageElwallpaper) {
+                peer.imageElwallpaper = document.createElement('img');
+            }
+            peer.imageElwallpaper.src = wallpaper.url
+        },
+
 
         startCamera: () => {
             var mediaConfig = {
-                audio: true,
+                audio: {
+                    mandatory: {
+                        echoCancellation: false, 
+                        googAutoGainControl: true,
+                        googNoiseSuppression: true,
+                        googHighpassFilter: true,
+                        googTypingNoiseDetection: true,
+                    },
+                },
                 video: {
                     mandatory: {},
                     optional: []
                 }
             };
-            camera.preview = document.createElement('video')
-            camera.preview.controls = false;
-            camera.preview.autoplay = true;
+            if (!camera.preview) {
+                camera.preview = document.createElement('video')
+                camera.preview.controls = false;
+                camera.preview.autoplay = true;
+                camera.preview.muted = "muted";
+            }
             return requestUserMedia(mediaConfig)
                 .then(function (stream) {
                     attachMediaStream(camera.preview, stream);
                     camera.stream = stream;
+                    localAudioSource = audioContext.createMediaStreamSource(camera.stream);
+                    localAudioSource.connect(mediaSourceAudioDestinationNode);
                 })
                 .catch(Error('Failed to get access to local media.'));
         },
@@ -249,7 +317,70 @@ export const PeerManager = (function () {
             for (var track in camera.stream.getTracks()) {
                 track.stop();
             }
-            camera.preview.src = '';
+        },
+
+        selectScence: (selectedScence, src) => {
+            switch (selectedScence) {
+                case "starting":
+                case "ending":
+                case "break":
+                    if (camera.preview) {
+                        camera.preview.pause();
+                    }
+                    if (!scence.preview) {
+                        scence.preview = document.createElement('video')
+                        scence.preview.controls = false;
+                        scence.preview.autoplay = true;
+                        scence.preview.mute = true;
+                        scence.preview.loop = true;
+                        scence.preview.crossOrigin = "anonymous";
+                        scenceAudioSource = audioContext.createMediaElementSource(scence.preview);
+                        scenceAudioSource.connect(mediaSourceAudioDestinationNode);
+
+                    } else {
+                        if (scence.preview.paused) {
+                            scence.preview.play();
+                        }
+                    }
+
+                    scenceAudioSource.connect(mediaSourceAudioDestinationNode);
+                    scence.preview.src = src;
+                    if (camera.preview) {
+                        camera.stream.getTracks().forEach(function (t) {
+                            t.enabled = false;
+                        });
+                    }
+
+                    if (remoteVideoEl.preview) {
+                        remoteVideoEl.stream.getTracks().forEach(function (t) {
+                            t.enabled = false;
+                        });
+                    }
+
+                    break;
+                case "main":
+                case "overlay":
+                    if (camera.preview) {
+                        camera.stream.getTracks().forEach(function (t) {
+                            t.enabled = true;
+                        });
+                        camera.preview.play();
+                    }
+
+                    if (remoteVideoEl.preview) {
+                        remoteVideoEl.stream.getTracks().forEach(function (t) {
+                            t.enabled = true;
+                        });
+                        remoteVideoEl.preview.play();
+                    }
+
+                    if (scence.preview) {
+                        scenceAudioSource?.disconnect();
+                        scence.preview.pause();
+                    }
+                    break;
+            }
+            scence.current = selectedScence;
         }
     };
 
@@ -257,10 +388,7 @@ export const PeerManager = (function () {
 
 const Peer = function (canvasRef) {
     this.pc = new RTCPeerConnection();
-    this.remoteVideoEl = document.createElement('video');
     this.canvasEl = canvasRef.current;
-    this.remoteVideoEl.controls = false;
     this.overlay = {};
-    this.remoteVideoEl.autoplay = true;
     this.isStreaming = false;
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useContext ,useRef } from 'react';
+import React, { useEffect, useContext, useRef } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import {
@@ -11,6 +11,8 @@ import Player from '../components/player';
 import Overlays from '../components/controllers/overlay';
 import WebcamController from '../components/controllers/webcam';
 import QualityController from '../components/controllers/quality';
+import ScenceSelector from '../components/controllers/scene';
+import Wallpapers from '../components/controllers/wallpaper';
 const {
   Header,
   Content,
@@ -40,12 +42,24 @@ function Home() {
     peerManager.startCamera();
   }
 
+  const onStopWebCam = () => {
+    peerManager.stopCamera();
+  }
 
   const onSelectOverlay = (overlay) => {
     if (state.selectedDevice) {
       setGraphics(() => ({
         ...graphics,
         selectedOverlay: overlay
+      }));
+    }
+  }
+
+  const onSelectWallpaper = (wallpaper) => {
+    if (state.selectedDevice) {
+      setGraphics(() => ({
+        ...graphics,
+        selectedWallpaper: wallpaper
       }));
     }
   }
@@ -58,12 +72,33 @@ function Home() {
     peerManager.stopStream();
   }
 
+  const onScenceSelect = (scence) => {
+    var src = "";
+    switch (scence) {
+      case "starting":
+        src = "overlay.mp4"
+        break;
+      case "ending":
+        src = "overlay3.mp4"
+        break;
+      case "break":
+        src = "overlay2.mp4"
+        break;
+    }
+    peerManager.selectScence(scence, src)
+  }
+
   useEffect(() => {
     if (Object.keys(graphics.selectedOverlay).length > 0) {
       peerManager.setOverlay(graphics.selectedOverlay);
     }
   }, [graphics.selectedOverlay]);
 
+  useEffect(() => {
+    if (Object.keys(graphics.selectedWallpaper).length > 0) {
+      peerManager.setWallpaper(graphics.selectedWallpaper);
+    }
+  }, [graphics.selectedWallpaper]);
 
   useEffect(() => {
     if (state.selectedDevice) {
@@ -80,7 +115,7 @@ function Home() {
 
   return (
     <React.Fragment>
-      <Head>
+      {/* <Head>
         <title>Home - Nextron (with-javascript-ant-design)</title>
       </Head>
 
@@ -88,12 +123,14 @@ function Home() {
         <Link href="/next">
           <a>Go to next page</a>
         </Link>
-      </Header>
+      </Header> */}
 
       <Content style={{ padding: 48 }}>
+        <ScenceSelector isDeviceSelected={state.selectedDevice ? true : false} onScenceSelect={onScenceSelect} />
         <QualityController isDeviceSelected={state.selectedDevice ? true : false} onQualitySelect={onQualitySelect} />
         <Overlays overlays={graphics.overlays} onSelectOverlay={onSelectOverlay} />
-        <WebcamController state={state} onStartWebCam={onStartWebCam} />
+        <Wallpapers wallpapers={graphics.wallpapers} onSelectWallpaper={onSelectWallpaper}  />
+        <WebcamController state={state} onStartWebCam={onStartWebCam} onStopWebCam={onStopWebCam} />
         <Devices devices={state.devices} onLoadDevice={onLoadDevice} />
         <Player state={state} onStartStream={onStartStream} onStopStream={onStopStream} canvasRef={canvasRef} />
       </Content>

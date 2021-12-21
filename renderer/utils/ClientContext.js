@@ -18,7 +18,9 @@ const ClientProvider = (props) => {
 
     const [graphics, setGraphics] = useState({
         overlays: [],
-        selectedOverlay: {}
+        wallpapers:[],
+        selectedOverlay: {},
+        selectedWallpaper: {}
     });
 
     const fetchDevices = () => {
@@ -78,6 +80,11 @@ const ClientProvider = (props) => {
 
         setGraphics(() => ({
             ...graphics,
+            wallpapers : [
+                { url: 'images/overlays/overlay.png'},
+                { url: 'images/overlays/overlay2.png'},
+                { url: 'images/overlays/overlay3.png'},
+            ],
             overlays: [
                 { url: 'images/overlays/overlay.png', name: 'Pink Panther', coordinates: { feed: { x: 270, y: 98, height: 1.55, width: 1.45 }, camera: { x: 21, y: 94, height: 135, width: 210 } } },
                 { url: 'images/overlays/overlay2.png', name: 'Bule Panther', coordinates: { feed: { x: 35, y: 105, height: 1.48, width: 1.45 },camera: { x: 270, y: 98, height: 1.55, width: 1.45 } }  },

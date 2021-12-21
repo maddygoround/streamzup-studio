@@ -1,6 +1,5 @@
-import React, { useContext } from 'react';
+import React  from 'react';
 import { Select } from 'antd';
-import { ClientContext } from '../../utils/ClientContext';
 const { Option } = Select;
 const QualityController = ({isDeviceSelected, onQualitySelect}) => {
 

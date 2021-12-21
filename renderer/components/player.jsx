@@ -5,6 +5,8 @@ const Player = ({onStopStream,onStartStream ,state,canvasRef}) => {
         <>
             <canvas
                 ref={canvasRef}
+                width={640}
+                height={360}
             />
             <Button type="primary" onClick={onStartStream} shape="round" disabled={state.selectedDevice && !state.streamEnabled ? false : true} >
                 Start
