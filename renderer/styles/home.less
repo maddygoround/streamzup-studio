@@ -68,6 +68,7 @@
     .subContent {
       display: flex;
       flex-wrap: nowrap;
+      min-height: calc(100% - 42px);
       .streamSection {
         width: calc(100% - 300px);
         .streamTitle {
@@ -91,11 +92,17 @@
             }
           }
           .playerAction {
-            position: absolute;
+            position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
             width: 100%;
+            z-index: 1;
+            background: #000;
+            align-items: center;
+            justify-content: center;
+            display: flex;
+            padding: 15px;
           }
         }
       }
@@ -105,10 +112,42 @@
         background-color: #202022;
         position: relative;
         overflow: hidden;
-        .rightAsideTitle {
-          padding: 0.4rem 1rem;
-          border-bottom: 2px solid #000004;
-          background-color: #202022;
+        .socialBtn {
+          .ant-image {
+            width: 100%;
+            margin-bottom: 0.7rem;
+            display: block;
+          }
+        }
+        .socialOnChannels {
+          padding-top: 0.7rem;
+          .ant-radio-wrapper {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.7rem;
+          }
+          .ant-radio-group {
+            span.ant-radio {
+              top: 0;
+              .ant-radio-inner {
+                background-color: #202022;
+                border-color: #000004;
+                box-shadow: none !important;
+              }
+              &.ant-radio-checked .ant-radio-inner::after {
+                background-color: #10b981;
+                -webkit-transform: scale(1);
+                transform: scale(1);
+              }
+              + span {
+                display: flex;
+                align-items: center;
+                .ant-image {
+                  margin-right: 0.8rem;
+                }
+              }
+            }
+          }
         }
       }
     }

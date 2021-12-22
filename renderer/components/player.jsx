@@ -10,21 +10,29 @@ const Player = ({ onStopStream, onStartStream, state, canvasRef }) => {
         className="canvasPlayer"
       />
       <div className="playerAction">
-        <Button
-          type="primary"
-          onClick={onStartStream}
-          shape="round"
-          disabled={state.selectedDevice && !state.streamEnabled ? false : true}
-        >
-          Start
-        </Button>
-        <Button
-          shape="round"
-          onClick={onStopStream}
-          disabled={state.selectedDevice && state.streamEnabled ? false : true}
-        >
-          Stop{" "}
-        </Button>
+        <div className="d-flex mx-auto">
+          {/* <Button
+            type="primary"
+            onClick={onStartStream}
+            disabled={
+              state.selectedDevice && !state.streamEnabled ? false : true
+            }
+            className="me-2"
+          >
+            Start
+          </Button>
+          <Button
+          type="ghost"
+            onClick={onStopStream}
+            disabled={
+              state.selectedDevice && state.streamEnabled ? false : true
+            }
+          >
+            Stop
+          </Button> */}
+          <Button size="large" type="primary" className="me-2" danger>Go Live</Button>
+          <Button size="large" >Record</Button>
+        </div>
       </div>
     </div>
   );

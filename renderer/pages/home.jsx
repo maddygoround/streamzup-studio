@@ -1,7 +1,7 @@
 import React, { useEffect, useContext, useRef } from "react";
 import Head from "next/head";
 import Link from "next/link";
-import { Image, Layout, Tabs } from "antd";
+import { Image, Layout, Tabs, Radio } from "antd";
 import { ClientContext } from "../utils/ClientContext";
 import { fetch } from "../utils/fetch";
 import Devices from "../components/devices";
@@ -15,8 +15,11 @@ import Twitter from "../public/images/social/Facebook.svg";
 import Youtube from "../public/images/social/Youtube.svg";
 import Twitch from "../public/images/social/Twitch.svg";
 import facebook from "../public/images/social/facebook.svg";
+import YoutubeIcon from "../public/images/social/YoutubeIcon.svg";
+import TwitchIcon from "../public/images/social/TwitchIcon.svg";
 
 require("../styles/home.less");
+
 const { TabPane } = Tabs;
 function Home() {
   const { playback, overlay, peer } = useContext(ClientContext);
@@ -24,6 +27,12 @@ function Home() {
   const [graphics, setGraphics] = overlay;
   const [peerManager] = peer;
   const canvasRef = useRef(null);
+  const [channelsValue, setChannelsValue] = React.useState(1);
+
+  const onChannelsChange = e => {
+    console.log('radio checked', e.target.value);
+    setChannelsValue(e.target.value);
+  };
   const onLoadDevice = (deviceId) => {
     setState(() => ({
       ...state,
@@ -201,24 +210,36 @@ function Home() {
                 </div>
                 <div className="cardContent">
                   <div className=" mb-1">Channels</div>
-                  <div className="mb-3">
-
+                  <div className="mb-3 socialOnChannels">
+                    <Radio.Group onChange={onChannelsChange} value={channelsValue}>
+                      <Radio value={1}><Image preview={false} src={YoutubeIcon} /><span className="channelName">maddygoround</span></Radio>
+                      <Radio value={2}><Image preview={false} src={YoutubeIcon} /><span className="channelName">maddygoround</span></Radio>
+                      <Radio value={3}><Image preview={false} src={TwitchIcon} /><span className="channelName">maddygoround</span></Radio>
+                      <Radio value={4}><Image preview={false} src={TwitchIcon} /><span className="channelName">maddygoround</span></Radio>
+                    </Radio.Group>
                   </div>
-                  <div className=" mb-1">Options</div>
-                  <ul className="list-unstyled">
+                  <div className=" mb-2">Options</div>
+                  <ul className="list-unstyled shareSocialOnChannels">
                     <li>
-                      <div className="socialBtn"><Image src={Twitter}/></div>
+                      <div className="socialBtn">
+                        <Image preview={false} src={Twitter} />
+                      </div>
                     </li>
                     <li>
-                      <div className="socialBtn"><Image src={Youtube}/></div>
+                      <div className="socialBtn">
+                        <Image preview={false} src={Youtube} />
+                      </div>
                     </li>
                     <li>
-                      <div className="socialBtn"><Image src={Twitch}/></div>
+                      <div className="socialBtn">
+                        <Image preview={false} src={Twitch} />
+                      </div>
                     </li>
                     <li>
-                      <div className="socialBtn"><Image src={facebook}/></div>
+                      <div className="socialBtn">
+                        <Image preview={false} src={facebook} />
+                      </div>
                     </li>
-                   
                   </ul>
                 </div>
               </div>
