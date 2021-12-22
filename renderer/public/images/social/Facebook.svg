@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="184" height="30" viewBox="0 0 184 30">
+  <g id="Group_211" data-name="Group 211" transform="translate(-10 -42)">
+    <rect id="Rectangle_64" data-name="Rectangle 64" width="184" height="30" rx="4" transform="translate(10 42)" fill="#0041a8"/>
+    <g id="Group_219" data-name="Group 219" transform="translate(-1)">
+      <g id="Group_223" data-name="Group 223" transform="translate(-2)">
+        <text id="Facebook" transform="translate(90 61)" fill="#fff" font-size="12" font-family="JosefinSans-Regular, Josefin Sans"><tspan x="0" y="0">Facebook</tspan></text>
+        <g id="Group_218" data-name="Group 218" transform="translate(62 42)">
+          <path id="Path_197" data-name="Path 197" d="M35,56.389A.378.378,0,0,0,34.636,56H32.818a3.57,3.57,0,0,0-3.636,3.5v2.1H27.364a.377.377,0,0,0-.364.389v2.022a.377.377,0,0,0,.364.389h1.818v5.211a.377.377,0,0,0,.364.389h2.182a.378.378,0,0,0,.364-.389V64.4H34a.37.37,0,0,0,.351-.285l.524-2.022a.384.384,0,0,0-.35-.493H32.091V59.5a.714.714,0,0,1,.727-.7h1.818A.378.378,0,0,0,35,58.411Z" transform="translate(-16 -48)" fill="#fff"/>
+          <rect id="Rectangle_222" data-name="Rectangle 222" width="16" height="16" transform="translate(7 7)" fill="none"/>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

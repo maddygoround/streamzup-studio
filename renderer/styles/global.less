@@ -1,7 +1,6 @@
-// @import "~antd/lib/style/themes/default.less"; // <-- you need to import antd variables once in your project
-// @import "~antd/dist/antd.less";
-// @import "./fonts.less";
 @import url("https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@100;200;300;400;500;600;700&display=swap");
+
+
 @primary-color: #9147ff;
 @text-color: #120920;
 @text-color-secondary: #1f57c3;
@@ -73,8 +72,8 @@ body {
   border-color: #000004 !important;
   border-width: 2px !important;
   &-top,
-  &-right,
-  &-left,
+  &-end,
+  &-start,
   &-bottom{
     border-color: #000004 !important;
     border-width: 2px !important;
@@ -121,3 +120,15 @@ body {
 //         }
 //     }
 // }
+.cardSection{
+  .cardTitle {
+    padding: 0.4rem 1rem;
+    border-bottom: 2px solid #000004;
+    background-color: #202022;
+  }
+  .cardContent {
+    background-color: #18171c;
+    border-bottom: 2px solid #000004;
+    padding: 1.3rem 1.2rem;
+  }
+}
