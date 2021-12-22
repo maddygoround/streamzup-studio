@@ -2,8 +2,8 @@ const child_process = require('child_process');
 const ffmpeg = require('ffmpeg-static');
 const pubsub = (io, streams) => {
 
-  const rtmpUrl = "rtmp://sfo.contribute.live-video.net/app/live_103730989_uwUc4tObDngdgrXmOvygGWLmsDET1e" //decodeURIComponent(match[1]);
-  // const rtmpUrl = "rtmp://localhost:1935/live/123" //decodeURIComponent(match[1]);
+  //const rtmpUrl = "rtmp://sfo.contribute.live-video.net/app/live_103730989_uwUc4tObDngdgrXmOvygGWLmsDET1e" //decodeURIComponent(match[1]);
+  const rtmpUrl = "rtmp://localhost:1935/live/rfBd56ti2SMtYvSgD5xAV0YU99zampta7Z7S575KLkIZ9PYk" //decodeURIComponent(match[1]);
   console.log('Target RTMP URL:', rtmpUrl);
   let ffmpeg_process;
 
