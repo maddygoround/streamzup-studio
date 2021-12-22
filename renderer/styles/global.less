@@ -1,0 +1,123 @@
+// @import "~antd/lib/style/themes/default.less"; // <-- you need to import antd variables once in your project
+// @import "~antd/dist/antd.less";
+// @import "./fonts.less";
+@import url("https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@100;200;300;400;500;600;700&display=swap");
+@primary-color: #9147ff;
+@text-color: #120920;
+@text-color-secondary: #1f57c3;
+:root {
+  --bs-primary-rgb: 145, 71, 255;
+}
+html {
+  font-size: 14px;
+}
+body {
+  font-family: "Josefin Sans", sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+}
+.container,
+.container-lg,
+.container-md,
+.container-sm,
+.container-xl {
+  @media (min-width: 1300px) and (max-width: 1399px) {
+    max-width: 1280px;
+  }
+  @media (min-width: 1600px) and (max-width: 2099px) {
+    max-width: 1420px;
+  }
+}
+.fz {
+  &-30,
+  h2 {
+    font-size: 2.143rem;
+  }
+  &-18,
+  h4 {
+    font-size: 1.286rem;
+  }
+  &-16,
+  h5 {
+    font-size: 1.143rem;
+  }
+  &-14,
+  h6 {
+    font-size: 1rem;
+  }
+  &-12 {
+    font-size: 0.8571rem;
+  }
+}
+.fw {
+  &-300 {
+    font-weight: 300 !important;
+  }
+  &-400 {
+    font-weight: 400 !important;
+  }
+  &-500 {
+    font-weight: 500 !important;
+  }
+  &-600 {
+    font-weight: 600 !important;
+  }
+  &-700 {
+    font-weight: 700 !important;
+  }
+  &-800 {
+    font-weight: 800 !important;
+  }
+}
+.border{
+  border-color: #000004 !important;
+  border-width: 2px !important;
+  &-top,
+  &-right,
+  &-left,
+  &-bottom{
+    border-color: #000004 !important;
+    border-width: 2px !important;
+  }
+}
+@-moz-document url-prefix() {
+  div {
+    scrollbar-color: #469cfc #212a35;
+    scrollbar-width: thin;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+  background-color: #343a41;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-track {
+  border: 2px solid #212a35;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #469cfc;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  background-clip: content-box;
+}
+// .ant-btn {
+//     > span {
+//         display: inline-flex;
+//         align-items: center;
+//     }
+//     &.ant-btn-default {
+//         //   background-color: var(--blue);
+//         border-color: @primary-color;
+//         color: @primary-color;
+//         &:hover {
+//             border-color: @primary-color;
+//             background-color: @primary-color;
+//             color: #fff;
+//         }
+//     }
+// }

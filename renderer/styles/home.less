@@ -1,0 +1,78 @@
+.wrapper {
+  display: flex;
+  flex-wrap: nowrap;
+  .aside {
+    width: 300px;
+    // border-right: 2px solid #000004;
+        background-color: #202022;
+    position: relative;
+    overflow: hidden;
+    &::after {
+      content: "";
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      top: 42px;
+      background-color: #000004;
+      width: 2px;
+      height: calc(100%);
+    }
+    .ant-tabs {
+      font-size: 1rem;
+      .ant-tabs-nav {
+        margin-bottom: 0 !important;
+        .ant-tabs-nav-list {
+          width: 100%;
+          .ant-tabs-tab {
+            width: 50%;
+            justify-content: center;
+            border: 2px solid #000004;
+            &.ant-tabs-tab-active {
+              background-color: #202022;
+              color: #9147ff;
+              border-color: #9147ff;
+            }
+          }
+        }
+      }
+    }
+    .asideSection {
+      .asecTitle {
+        padding: 0.4rem 1rem;
+        border-bottom: 2px solid #000004;
+        background-color: #202022;
+      }
+      .asContent {
+        background-color: #18171c;
+        border-bottom: 2px solid #000004;
+        padding: 1.3rem 1.2rem;
+        .ant-menu {
+          border: 0;
+          .ant-menu-item {
+            margin-top: 0;
+            border-radius: 0.3rem;
+            height: 50px;
+            line-height: 50px;
+            font-size: 1.2rem;
+            &.ant-menu-item-selected {
+              background-color: #9147ff;
+              color: #fff;
+            }
+            &.ant-menu-item-active {
+              background-color: #202022;
+              color: #fff;
+            }
+          }
+        }
+      }
+    }
+  }
+  .mainContent {
+    width: calc(100% - 300px);
+    // padding: 1rem;
+    .mainContentHeader{
+      padding: 8px 16px;
+      width: 100%;
+    }
+  }
+}

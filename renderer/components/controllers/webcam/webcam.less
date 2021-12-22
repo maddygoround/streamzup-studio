@@ -1,0 +1,111 @@
+.cameraSetting {
+  .ant-checkbox-wrapper {
+    width: 100%;
+    .ant-checkbox {
+      opacity: 0;
+      position: absolute;
+      + span {
+        width: 100%;
+        height: 100px;
+        background-color: #202022;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        border-radius: 0.5rem;
+        border: 2px solid #000004;
+        &:hover {
+          border-color: #9147ff;
+        }
+        .custIcon-01-webcam-off {
+          display: none;
+        }
+        .custIcon-01-webcam-on {
+          display: inline-flex;
+        }
+        i {
+          line-height: 1;
+        }
+      }
+      &.ant-checkbox-checked {
+        + span {
+          .custIcon-01-webcam-on {
+            display: none;
+          }
+          .custIcon-01-webcam-off {
+            display: inline-flex;
+          }
+          border-color: #9147ff;
+          background-color: #000004;
+        }
+      }
+    }
+  }
+}
+.camPosition {
+  .ant-radio-group {
+    width: 100%;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    .ant-radio-wrapper {
+      width: 20%;
+      .ant-radio {
+        width: 100%;
+        height: 40px;
+        background-color: #202022;
+        border: 1px solid #000004;
+        position: relative;
+        overflow: hidden;
+        border-radius: 4px;
+        .ant-radio-inner {
+          position: absolute;
+          width: 40%;
+          height: 50%;
+          background-color: #9147ff;
+          border-radius: 0;
+          border: 0;
+          box-shadow: none !important;
+          border-radius: 3px;
+        }
+      }
+      &.ant-radio-wrapper-checked {
+        .ant-radio {
+          border-color: #9147ff;
+        }
+      }
+      &.top-left {
+        .ant-radio-inner {
+          top: 0;
+          right: auto;
+          left: 0;
+          bottom: auto;
+        }
+      }
+      &.top-right {
+        .ant-radio-inner {
+          top: 0;
+          right: 0;
+          left: auto;
+          bottom: auto;
+        }
+      }
+      &.bottom-left {
+        .ant-radio-inner {
+          top: auto;
+          right: auto;
+          left: 0;
+          bottom: 0;
+        }
+      }
+      &.bottom-right {
+        .ant-radio-inner {
+          top: auto;
+          right: 0;
+          left: auto;
+          bottom: 0;
+        }
+      }
+    }
+  }
+}

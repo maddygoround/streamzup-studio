@@ -24,7 +24,7 @@ function Next() {
         </Link>
       </Header>
 
-      <Content style={{ padding: 48 }}>
+      <Content >
         <Result
           status="success"
           title="Nextron"
