@@ -1,6 +1,5 @@
-import { Menu, Select } from "antd";
+import { Menu } from "antd";
 import React from "react";
-const { Option } = Select;
 const ScenceSelector = ({ isDeviceSelected, onScenceSelect }) => {
   return (
     <>

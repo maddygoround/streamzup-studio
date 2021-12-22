@@ -1,7 +1,7 @@
-const withCss = require("@zeit/next-css");
+// const withCss = require("@zeit/next-css");
 const withAntdLess = require("next-plugin-antd-less");
 const withPlugins = require("next-compose-plugins");
-const path = require("path");
+// const path = require("path");
 
 module.exports = withPlugins(
   [
