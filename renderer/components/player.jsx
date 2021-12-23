@@ -1,12 +1,13 @@
 import React, { useRef, useEffect } from "react";
 import { Button } from "antd";
 const Player = ({ onStopStream, onStartStream, state, canvasRef }) => {
+  const canvasContainerRef = useRef(null);
   return (
-    <div className="canvasPlayerContainer">
+    <div className="canvasPlayerContainer" ref={canvasContainerRef}>
       <canvas
         ref={canvasRef}
-        // width={640}
-        // height={360}
+        width={canvasContainerRef.width}
+        height={canvasContainerRef.height}
         className="canvasPlayer"
       />
       <div className="playerAction">
