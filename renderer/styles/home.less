@@ -1,11 +1,22 @@
+
+:root{
+  --sidebarWidth: 375px;
+ 
+}
+@media (min-width: 1366px) and (max-width: 1600px) {
+  :root{
+    --sidebarWidth: 300px;
+  }
+}
 .wrapper {
   display: flex;
   flex-wrap: nowrap;
   min-height: calc(100vh - 128px);
+
   .aside {
-    width: 375px;
+    width: var(--sidebarWidth);
     // border-right: 2px solid #000004;
-    // background-color: #202022;    
+    // background-color: #202022;
     background-color: #18171c;
     position: relative;
     overflow: hidden;
@@ -37,7 +48,7 @@
           }
         }
       }
-      .ant-tabs-tabpane{
+      .ant-tabs-tabpane {
         max-height: calc(100vh - 170px);
         overflow-y: auto;
       }
@@ -64,8 +75,8 @@
     }
   }
   .mainContent {
-    width: calc(100% - 375px);
-    background-color: #18171C;
+    width: calc(100% - var(--sidebarWidth));
+    background-color: #18171c;
     // margin-bottom: 78px;
     // padding: 1rem;
     .mainContentHeader {
@@ -76,9 +87,9 @@
     .subContent {
       display: flex;
       flex-wrap: nowrap;
-      min-height: calc(100% - 56px);
+      min-height: calc(100% - 42px);
       .streamSection {
-        width: calc(100% - 375px);
+        width: calc(100% - var(--sidebarWidth));
         .streamTitle {
           padding: 0.4rem 1rem;
           border-bottom: 2px solid #000004;
@@ -99,12 +110,23 @@
               // height: 100%;
             }
           }
-          
+        }
+        .streamInfoDetails {
+          .siEdit {
+            font-size: 20px;
+            color: #fff;
+            cursor: pointer;
+            display: flex;
+            align-self: flex-start;
+            &:hover {
+              color: var(--primary-color);
+            }
+          }
         }
       }
       .rightAside {
-        width: 375px;
-        min-width: 375px;
+        width: var(--sidebarWidth);
+        min-width: var(--sidebarWidth);
         max-height: calc(100vh - 170px);
         overflow-y: auto;
         // background-color: #202022;
@@ -120,28 +142,26 @@
         }
         .socialOnChannels {
           padding-top: 0.7rem;
-       
         }
       }
     }
   }
 }
 .playerAction {
-
   width: 100%;
   z-index: 1;
-  background: #0E0D12;
+  background: #0e0d12;
   align-items: center;
   justify-content: center;
   display: flex;
   padding: 15px;
-  .ant-btn{
+  .ant-btn {
     width: 130px;
     height: 45px;
     line-height: 1;
     font-size: 1.2rem;
-    &.record-btn{ 
-      border: 1px solid #FFFFFF61;
+    &.record-btn {
+      border: 1px solid #ffffff61;
     }
   }
 }

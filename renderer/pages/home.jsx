@@ -17,6 +17,9 @@ import Twitch from "../public/images/social/twitch.svg";
 import facebook from "../public/images/social/facebook.svg";
 import YoutubeIcon from "../public/images/social/youtubeIcon.svg";
 import TwitchIcon from "../public/images/social/twitchIcon.svg";
+import Beard from "../public/images/Beard.png";
+import { SteamInfo } from "../components/steamInfo/steamInfo";
+import Icon from "../components/icon";
 
 require("../styles/home.less");
 
@@ -219,13 +222,28 @@ function Home() {
                   canvasRef={canvasRef}
                 />
               </div>
-              
+
               <div className="cardSection">
                 <div className="cardTitle">
-                  <span>Devices</span>
+                  <span>Stream Information</span>
                 </div>
                 <div className="cardContent">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Quam porro fugit sit magni ab amet repudiandae consectetur officia corporis dignissimos. Possimus eos aperiam odit perferendis distinctio tempora unde nisi magni.
+                  <div className="streamInfoDetails d-flex">
+                    <div className="w-75">
+                      <SteamInfo
+                        src={Beard}
+                        title="krunal"
+                        details="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Officia hic, eaque sint praesentium error exercitationem ab culpa nam iste a temporibus esse, quia assumenda sequi ducimus dolores debitis quibusdam eligendi."
+                        username="nikrunic"
+                      />
+                    </div>
+                    <div className="siEdit ms-auto">
+                      <Icon type="edit" />
+                    </div>
+                  </div>
+                  {/* <div className="nodata">
+                    No details available
+                  </div> */}
                 </div>
               </div>
             </div>
@@ -313,8 +331,12 @@ function Home() {
           >
             Stop
           </Button> */}
-          <Button size="large" type="primary" className="me-2" danger>Go Live</Button>
-          <Button size="large" type="default" className="record-btn">Record</Button>
+          <Button size="large" type="primary" className="me-2" danger>
+            Go Live
+          </Button>
+          <Button size="large" type="default" className="record-btn">
+            Record
+          </Button>
         </div>
       </div>
     </React.Fragment>

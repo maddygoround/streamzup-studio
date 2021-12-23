@@ -37,7 +37,7 @@ module.exports = withPlugins(
             config.target = "electron-renderer";
           }
           config.module.rules.push({
-            test: [/\.svg$/, /\.woff$/],
+            test: [/\.svg$/, /\.woff$/, /\.png$/],
             loader: "file-loader",
             options: {
               name: "[name].[hash:8].[ext]",
