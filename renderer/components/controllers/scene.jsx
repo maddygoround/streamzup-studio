@@ -3,7 +3,7 @@ import React from "react";
 const ScenceSelector = ({ isDeviceSelected, onScenceSelect }) => {
   return (
     <>
-      <Menu selectedKeys={["main"]} mode="vertical">
+      <Menu  defaultValue="main" mode="vertical" onSelect={onScenceSelect} >
         <Menu.Item key="main">Main</Menu.Item>
         <Menu.Item key="starting">Starting soon</Menu.Item>
         <Menu.Item key="break">Be right back</Menu.Item>

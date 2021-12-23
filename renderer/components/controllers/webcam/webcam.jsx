@@ -21,29 +21,15 @@ const WebcamController = ({
     <div className="cameraSetting">
       <div className="row ">
         <div className="col-lg-6">
-          <Checkbox onChange={onChange}>
+          <Checkbox onChange={onChange} disabled={state.selectedDevice ? false : true}>
             <Icon type="01-webcam-on" />
             <Icon type="01-webcam-off" />
           </Checkbox>
         </div>
         <div className="col-lg-6">
-          <Checkbox onChange={onChange}>
+          <Checkbox onChange={onChange} disabled={state.selectedDevice ? false : true}>
             <Icon type="01-webcam-off" />
           </Checkbox>
-          {/* <Button
-            type="primary"
-            onClick={onStartWebCam}
-            disabled={state.selectedDevice ? false : true}
-          >
-            Start Camera
-          </Button>
-          <Button
-            type="primary"
-            onClick={onStopWebCam}
-            disabled={state.selectedDevice ? false : true}
-          >
-            Stop Camera
-          </Button> */}
         </div>
       </div>
 

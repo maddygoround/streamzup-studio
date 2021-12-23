@@ -41,7 +41,7 @@ export const PeerManager = (function () {
                         context.fillStyle = "#000000";
                         context.fillRect(0, 0, peer.canvasEl.width, peer.canvasEl.height);
                     }
-                    context.drawImage(remoteVideoEl.preview, 0, (360 - 288) / 2, peer.canvasEl.width, 288);
+                    context.drawImage(remoteVideoEl.preview, 0, (peer.canvasEl.height - peer.canvasEl.width * (9/20)) / 2, peer.canvasEl.width, peer.canvasEl.width * (9/20));
                     if (camera.stream?.active) {
                         context.drawImage(camera.preview, peer.positionX, peer.positionY, 160, 90);
                     }
@@ -50,7 +50,7 @@ export const PeerManager = (function () {
             case "overlay":
                 if (!remoteVideoEl.preview.paused && !remoteVideoEl.preview.ended) {
                     if (peer.imageEl) {
-                        context.drawImage(peer.imageEl, 0, 0, peer.canvasEl.width, peer.canvasEl.height);
+                        context.drawImage(peer.imageEl, 0, 0, peer.canvasEl.wudth, peer.canvasEl.height);
                         context.drawImage(remoteVideoEl.preview, peer.overlay.coordinates.feed.x, peer.overlay.coordinates.feed.y, peer.canvasEl.width / peer.overlay.coordinates.feed.width, peer.canvasEl.height / peer.overlay.coordinates.feed.height);
                         if (camera.stream?.active) {
                             context.drawImage(camera.preview, peer.overlay.coordinates.camera.x, peer.overlay.coordinates.camera.y, peer.overlay.coordinates.camera.width, peer.overlay.coordinates.camera.height);
@@ -107,7 +107,7 @@ export const PeerManager = (function () {
                 case 'disconnected':
                     cancelAnimationFrame(animationId);
                     var context = peer.canvasEl.getContext('2d', { alpha: false });
-                    context.clearRect(0, 0, peer.canvasEl.width, peer.canvasEl.height);
+                    context.clearRect(0, 0, peer.canvasEl.clientWidth, peer.canvasEl.clientHeight);
                     delete peerDatabase[remoteId];
                     if (peer.isStreaming) {
                         if (mediaRecorder) {
@@ -283,7 +283,7 @@ export const PeerManager = (function () {
         setCameraPosition: (position) => {
             switch (position) {
                 case "left-bottom":
-                    peer.positionY = (peer.canvasEl.height - 90);
+                    peer.positionY = (peer.canvasEl.clientHeight - 90);
                     peer.positionX = 0;
                     break;
                 case "left-top":
@@ -291,12 +291,12 @@ export const PeerManager = (function () {
                     peer.positionX = 0;
                     break;
                 case "right-top":
-                    peer.positionX = (peer.canvasEl.width - 160);
+                    peer.positionX = (peer.canvasEl.clientWidth - 160);
                     peer.positionY = 0
                     break;
                 case "right-bottom":
-                    peer.positionX = (peer.canvasEl.width - 160);
-                    peer.positionY = (peer.canvasEl.height - 90);
+                    peer.positionX = (peer.canvasEl.clientWidth - 160);
+                    peer.positionY = (peer.canvasEl.clientHeight - 90);
                     break;
             }
             peer.position = position
@@ -327,7 +327,7 @@ export const PeerManager = (function () {
             return requestUserMedia(mediaConfig)
                 .then(function (stream) {
                     attachMediaStream(camera.preview, stream);
-                    peer.positionY = (peer.canvasEl.height - 90);
+                    peer.positionY = (peer.canvasEl.clientHeight - 90);
                     peer.positionX = 0
                     camera.stream = stream;
                     localAudioSource = audioContext.createMediaStreamSource(camera.stream);

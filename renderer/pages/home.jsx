@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useRef } from "react";
+import React, { useEffect, useContext, useRef, useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import { Image, Layout, Tabs, Radio } from "antd";
@@ -11,12 +11,12 @@ import WebcamController from "../components/controllers/webcam/webcam";
 import QualityController from "../components/controllers/quality";
 import ScenceSelector from "../components/controllers/scene";
 import Wallpapers from "../components/controllers/wallpaper/wallpaper";
-import Twitter from "../public/images/social/Facebook.svg";
-import Youtube from "../public/images/social/Youtube.svg";
-import Twitch from "../public/images/social/Twitch.svg";
+import Twitter from "../public/images/social/twitter.svg";
+import Youtube from "../public/images/social/youtube.svg";
+import Twitch from "../public/images/social/twitch.svg";
 import facebook from "../public/images/social/facebook.svg";
-import YoutubeIcon from "../public/images/social/YoutubeIcon.svg";
-import TwitchIcon from "../public/images/social/TwitchIcon.svg";
+import YoutubeIcon from "../public/images/social/youtubeIcon.svg";
+import TwitchIcon from "../public/images/social/twitchIcon.svg";
 
 require("../styles/home.less");
 
@@ -28,7 +28,7 @@ function Home() {
   const [peerManager] = peer;
   const canvasRef = useRef(null);
   const [channelsValue, setChannelsValue] = React.useState(1);
-
+  const [selectedGraphicContainer, setSelectedGraphicContainer] = useState("main");
   const onChannelsChange = e => {
     console.log('radio checked', e.target.value);
     setChannelsValue(e.target.value);
@@ -45,57 +45,70 @@ function Home() {
   };
 
   const onStartWebCam = () => {
-    peerManager.startCamera();
+    if (state.selectedDevice) {
+      peerManager.startCamera();
+    }
   };
 
   const onStopWebCam = () => {
-    peerManager.stopCamera();
+    if (state.selectedDevice) {
+      peerManager.stopCamera();
+    }
   };
 
-  const onSelectOverlay = (overlay) => {
+  const onSelectOverlay = (event) => {
     if (state.selectedDevice) {
       setGraphics(() => ({
         ...graphics,
-        selectedOverlay: overlay,
+        selectedOverlay: event.target.value,
       }));
     }
   };
 
   const onSetPosition = (position) => {
-    peerManager.setCameraPosition(position);
+    if (state.selectedDevice) {
+      peerManager.setCameraPosition(position);
+    }
   };
 
-  const onSelectWallpaper = (wallpaper) => {
+  const onSelectWallpaper = (event) => {
     if (state.selectedDevice) {
       setGraphics(() => ({
         ...graphics,
-        selectedWallpaper: wallpaper,
+        selectedWallpaper: event.target.value,
       }));
     }
   };
 
   const onStartStream = () => {
-    peerManager.startStream(canvasRef);
+    if (state.selectedDevice) {
+      peerManager.startStream(canvasRef);
+    }
   };
 
   const onStopStream = () => {
-    peerManager.stopStream();
+    if (state.selectedDevice) {
+      peerManager.stopStream();
+    }
   };
 
   const onScenceSelect = (scence) => {
-    var src = "";
-    switch (scence) {
-      case "starting":
-        src = "overlay.mp4";
-        break;
-      case "ending":
-        src = "overlay3.mp4";
-        break;
-      case "break":
-        src = "overlay2.mp4";
-        break;
+    setSelectedGraphicContainer(scence.key);
+    if (state.selectedDevice) {
+      var src = "";
+      switch (scence.key) {
+        case "starting":
+          src = "overlay.mp4";
+          break;
+        case "ending":
+          src = "overlay3.mp4";
+          break;
+        case "break":
+          src = "overlay2.mp4";
+          break;
+      }
+      peerManager.selectScence(scence.key, src);
     }
-    peerManager.selectScence(scence, src);
   };
 
   useEffect(() => {
@@ -152,28 +165,36 @@ function Home() {
                   />
                 </div>
               </div>
-              <div className="cardSection">
-                <div className="cardTitle">
-                  <span>Wallpapers</span>
+              {
+                selectedGraphicContainer === "main" &&
+
+                <div className="cardSection">
+                  <div className="cardTitle">
+                    <span>Wallpapers</span>
+                  </div>
+                  <div className="cardContent">
+                    <Wallpapers
+                      wallpapers={graphics.wallpapers}
+                      onSelectWallpaper={onSelectWallpaper}
+                    />
+                  </div>
+
                 </div>
-                <div className="cardContent">
-                  <Wallpapers
-                    wallpapers={graphics.wallpapers}
-                    onSelectWallpaper={onSelectWallpaper}
-                  />
+              }
+              {
+                selectedGraphicContainer === "overlay" &&
+                <div className="cardSection">
+                  <div className="cardTitle">
+                    <span>Overlays</span>
+                  </div>
+                  <div className="cardContent">
+                    <Overlays
+                      overlays={graphics.overlays}
+                      onSelectOverlay={onSelectOverlay}
+                    />
+                  </div>
                 </div>
-              </div>
-              <div className="cardSection">
-                <div className="cardTitle">
-                  <span>Overlays</span>
-                </div>
-                <div className="cardContent">
-                  <Overlays
-                    overlays={graphics.overlays}
-                    onSelectOverlay={onSelectOverlay}
-                  />
-                </div>
-              </div>
+              }
             </TabPane>
             <TabPane tab="Setup" key="2">
               Content of card tab 2
@@ -213,9 +234,7 @@ function Home() {
                   <div className="mb-3 socialOnChannels">
                     <Radio.Group onChange={onChannelsChange} value={channelsValue}>
                       <Radio value={1}><Image preview={false} src={YoutubeIcon} /><span className="channelName">maddygoround</span></Radio>
-                      <Radio value={2}><Image preview={false} src={YoutubeIcon} /><span className="channelName">maddygoround</span></Radio>
-                      <Radio value={3}><Image preview={false} src={TwitchIcon} /><span className="channelName">maddygoround</span></Radio>
-                      <Radio value={4}><Image preview={false} src={TwitchIcon} /><span className="channelName">maddygoround</span></Radio>
+                      <Radio value={2}><Image preview={false} src={TwitchIcon} /><span className="channelName">maddygoround</span></Radio>
                     </Radio.Group>
                   </div>
                   <div className=" mb-2">Options</div>
