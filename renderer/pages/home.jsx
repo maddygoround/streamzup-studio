@@ -229,7 +229,7 @@ function Home() {
                 </div>
                 <div className="cardContent">
                   <div className="streamInfoDetails d-flex">
-                    <div className="w-75">
+                    {/* <div className="w-75">
                       <SteamInfo
                         src={Beard}
                         title="krunal"
@@ -239,11 +239,12 @@ function Home() {
                     </div>
                     <div className="siEdit ms-auto">
                       <Icon type="edit" />
-                    </div>
+                    </div> */}
+          
                   </div>
-                  {/* <div className="nodata">
+                  <div className="nodata">
                     No details available
-                  </div> */}
+                  </div>
                 </div>
               </div>
             </div>
@@ -254,7 +255,7 @@ function Home() {
                 </div>
                 <div className="cardContent">
                   <div className=" mb-1">Channels</div>
-                  <div className="mb-3 socialOnChannels customRadio">
+                  {/* <div className="mb-3 socialOnChannels customRadio">
                     <Radio.Group
                       onChange={onChannelsChange}
                       value={channelsValue}
@@ -268,6 +269,9 @@ function Home() {
                         <span className="channelName">maddygoround</span>
                       </Radio>
                     </Radio.Group>
+                  </div> */}
+                  <div className="nodata mb-3">
+                    No channels available
                   </div>
                   <div className=" mb-2">Options</div>
                   <ul className="list-unstyled shareSocialOnChannels">

@@ -13,7 +13,7 @@ export const Header = () => {
           <Image src={logo} preview={false} className="headerLogo" />
         </div>
         <div className="header-right d-flex flex-row  justify-content-end align-items-center">
-          Version - 0.0.1
+          Version 0.0.1
         </div>
       </div>
     </header>

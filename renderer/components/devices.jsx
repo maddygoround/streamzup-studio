@@ -24,7 +24,9 @@ const Devices = ({ devices, onLoadDevice, selectedDevice }) => {
           );
         })}
       </ul> :
-      <div className="text-center">No devices found</div>}
+           <div className="nodata">
+           No devices found
+         </div>}
     </>
   );
 };
