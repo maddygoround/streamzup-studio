@@ -208,7 +208,7 @@ function Home() {
           <div className="mainContentHeader border-bottom border-top d-flex align-items-center">
             <div className="ms-auto d-flex">
               <div className="px-3">Login</div>
-              <div className="px-3">Help</div>
+              <div className="px-3 d-flex align-items-center"><Icon type="help" className="me-1 d-inline-flex fz-16"/> <span>Help</span></div>
             </div>
           </div>
           <div className="subContent">
@@ -335,8 +335,11 @@ function Home() {
           >
             Stop
           </Button> */}
-          <Button size="large" type="primary" className="me-2" danger>
+          <Button size="large" type="primary" className="me-2">
             Go Live
+          </Button>
+          <Button size="large" type="primary" className="me-2" danger>
+            End Stream
           </Button>
           <Button size="large" type="default" className="record-btn">
             Record

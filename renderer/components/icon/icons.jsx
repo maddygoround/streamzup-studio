@@ -42,5 +42,14 @@ const icons = [
     code: `<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentcolor" viewBox="0 0 25 25">
     <path id="Path_19123" data-name="Path 19123" d="M20.739,10.279l-5.99-6.033a.807.807,0,0,0-1.19,0l-9.3,9.3A.85.85,0,0,0,4,14.145v5.99a.85.85,0,0,0,.85.85h5.99a.85.85,0,0,0,.595-.255l9.3-9.261a.807.807,0,0,0,0-1.19ZM10.5,19.285H5.7v-4.8l5.31-5.268,4.758,4.8ZM17,12.828l-4.8-4.8,1.954-2,4.8,4.843Z"/></svg>`,
   },
+  {
+    id: "help",
+    code: `<svg width="1em" height="1em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<circle cx="12" cy="12" r="10"></circle>
+<path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+<line x1="12" y1="17" x2="12.01" y2="17"></line>
+</svg>
+` ,
+  },
 ];
 export default icons;
