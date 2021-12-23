@@ -19,7 +19,7 @@ const WebcamController = ({
   };
   return (
     <div className="cameraSetting">
-      <div className="row ">
+      <div className="row mb-3">
         <div className="col-lg-6">
           <Checkbox onChange={onChange} disabled={state.selectedDevice ? false : true}>
             <Icon type="01-webcam-on" />
@@ -28,12 +28,11 @@ const WebcamController = ({
         </div>
         <div className="col-lg-6">
           <Checkbox onChange={onChange} disabled={state.selectedDevice ? false : true}>
-            <Icon type="01-webcam-off" />
+            <Icon type="image" />
           </Checkbox>
         </div>
       </div>
 
-      <Divider />
       <div className="camPosition">
         <div className="camTitle mb-1">Position</div>
         <Radio.Group onChange={onChangePosition} value={value}>

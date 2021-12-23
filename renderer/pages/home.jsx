@@ -1,7 +1,7 @@
 import React, { useEffect, useContext, useRef, useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
-import { Image, Layout, Tabs, Radio } from "antd";
+import { Image, Layout, Tabs, Radio, Button } from "antd";
 import { ClientContext } from "../utils/ClientContext";
 import { fetch } from "../utils/fetch";
 import Devices from "../components/devices";
@@ -28,9 +28,10 @@ function Home() {
   const [peerManager] = peer;
   const canvasRef = useRef(null);
   const [channelsValue, setChannelsValue] = React.useState(1);
-  const [selectedGraphicContainer, setSelectedGraphicContainer] = useState("main");
-  const onChannelsChange = e => {
-    console.log('radio checked', e.target.value);
+  const [selectedGraphicContainer, setSelectedGraphicContainer] =
+    useState("main");
+  const onChannelsChange = (e) => {
+    console.log("radio checked", e.target.value);
     setChannelsValue(e.target.value);
   };
   const onLoadDevice = (deviceId) => {
@@ -165,9 +166,7 @@ function Home() {
                   />
                 </div>
               </div>
-              {
-                selectedGraphicContainer === "main" &&
-
+              {selectedGraphicContainer === "main" && (
                 <div className="cardSection">
                   <div className="cardTitle">
                     <span>Wallpapers</span>
@@ -178,11 +177,9 @@ function Home() {
                       onSelectWallpaper={onSelectWallpaper}
                     />
                   </div>
-
                 </div>
-              }
-              {
-                selectedGraphicContainer === "overlay" &&
+              )}
+              {selectedGraphicContainer === "overlay" && (
                 <div className="cardSection">
                   <div className="cardTitle">
                     <span>Overlays</span>
@@ -194,10 +191,9 @@ function Home() {
                     />
                   </div>
                 </div>
-              }
+              )}
             </TabPane>
             <TabPane tab="Setup" key="2">
-              Content of card tab 2
               <QualityController
                 isDeviceSelected={state.selectedDevice ? true : false}
                 onQualitySelect={onQualitySelect}
@@ -215,13 +211,22 @@ function Home() {
           <div className="subContent">
             <div className="streamSection">
               <div className="streamTitle">Stream Preview</div>
-              <div className="streamPlayer">
+              <div className="streamPlayer border-bottom">
                 <Player
                   state={state}
                   onStartStream={onStartStream}
                   onStopStream={onStopStream}
                   canvasRef={canvasRef}
                 />
+              </div>
+              
+              <div className="cardSection">
+                <div className="cardTitle">
+                  <span>Devices</span>
+                </div>
+                <div className="cardContent">
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Quam porro fugit sit magni ab amet repudiandae consectetur officia corporis dignissimos. Possimus eos aperiam odit perferendis distinctio tempora unde nisi magni.
+                </div>
               </div>
             </div>
             <div className="rightAside border-start">
@@ -231,10 +236,19 @@ function Home() {
                 </div>
                 <div className="cardContent">
                   <div className=" mb-1">Channels</div>
-                  <div className="mb-3 socialOnChannels">
-                    <Radio.Group onChange={onChannelsChange} value={channelsValue}>
-                      <Radio value={1}><Image preview={false} src={YoutubeIcon} /><span className="channelName">maddygoround</span></Radio>
-                      <Radio value={2}><Image preview={false} src={TwitchIcon} /><span className="channelName">maddygoround</span></Radio>
+                  <div className="mb-3 socialOnChannels customRadio">
+                    <Radio.Group
+                      onChange={onChannelsChange}
+                      value={channelsValue}
+                    >
+                      <Radio value={1}>
+                        <Image preview={false} src={YoutubeIcon} />
+                        <span className="channelName">maddygoround</span>
+                      </Radio>
+                      <Radio value={2}>
+                        <Image preview={false} src={TwitchIcon} />
+                        <span className="channelName">maddygoround</span>
+                      </Radio>
                     </Radio.Group>
                   </div>
                   <div className=" mb-2">Options</div>
@@ -268,6 +282,7 @@ function Home() {
                 </div>
                 <div className="cardContent">
                   <Devices
+                    selectedDevice={state.selectedDevice}
                     devices={state.devices}
                     onLoadDevice={onLoadDevice}
                   />
@@ -275,6 +290,31 @@ function Home() {
               </div>
             </div>
           </div>
+        </div>
+      </div>
+      <div className="playerAction">
+        <div className="d-flex mx-auto">
+          {/* <Button
+            type="primary"
+            onClick={onStartStream}
+            disabled={
+              state.selectedDevice && !state.streamEnabled ? false : true
+            }
+            className="me-2"
+          >
+            Start
+          </Button>
+          <Button
+          type="ghost"
+            onClick={onStopStream}
+            disabled={
+              state.selectedDevice && state.streamEnabled ? false : true
+            }
+          >
+            Stop
+          </Button> */}
+          <Button size="large" type="primary" className="me-2" danger>Go Live</Button>
+          <Button size="large" type="default" className="record-btn">Record</Button>
         </div>
       </div>
     </React.Fragment>
