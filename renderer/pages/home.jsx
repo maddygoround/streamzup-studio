@@ -10,16 +10,11 @@ import Overlays from "../components/controllers/overlay";
 import WebcamController from "../components/controllers/webcam/webcam";
 import QualityController from "../components/controllers/quality";
 import ScenceSelector from "../components/controllers/scene";
-import Wallpapers from "../components/controllers/wallpaper/wallpaper";
+import Gallery from "../components/controllers/gallery/gallery";
 import Twitter from "../public/images/social/twitter.svg";
 import Youtube from "../public/images/social/youtube.svg";
 import Twitch from "../public/images/social/twitch.svg";
 import facebook from "../public/images/social/facebook.svg";
-import YoutubeIcon from "../public/images/social/youtubeIcon.svg";
-import TwitchIcon from "../public/images/social/twitchIcon.svg";
-import Beard from "../public/images/Beard.png";
-import { SteamInfo } from "../components/steamInfo/steamInfo";
-import Icon from "../components/icon";
 
 require("../styles/home.less");
 
@@ -30,33 +25,36 @@ function Home() {
   const [graphics, setGraphics] = overlay;
   const [peerManager] = peer;
   const canvasRef = useRef(null);
-  const [channelsValue, setChannelsValue] = React.useState(1);
-  const [selectedGraphicContainer, setSelectedGraphicContainer] =
-    useState("main");
-  const onChannelsChange = (e) => {
-    console.log("radio checked", e.target.value);
-    setChannelsValue(e.target.value);
-  };
-  const onLoadDevice = (deviceId) => {
-    setState(() => ({
-      ...state,
-      selectedDevice: deviceId,
-    }));
+  const [webcamStatus, setWebcamStatus] = React.useState(false);
+  const [selectedGraphicContainer, setSelectedGraphicContainer] = useState("main");
+  const [selectedPosition, setSelectedPosition] = useState("bottom-left");
+
+  const onLoadUnloadDevice = (deviceId) => {
+    if (!state.selectedDevice || state.selectedDevice !== deviceId) {
+      setState(() => ({
+        ...state,
+        selectedDevice: deviceId,
+      }));
+    } else {
+      if (state.selectedDevice === deviceId) {
+        peerManager.release(deviceId);
+        setWebcamStatus(false);
+        setState(() => ({
+          ...state,
+          selectedDevice: undefined,
+        }));
+      }
+    }
   };
 
   const onQualitySelect = (value) => {
     peerManager.changeQuality(value);
   };
 
-  const onStartWebCam = () => {
-    if (state.selectedDevice) {
-      peerManager.startCamera();
-    }
-  };
 
-  const onStopWebCam = () => {
+  const onWebCamStatusChange = (e) => {
     if (state.selectedDevice) {
-      peerManager.stopCamera();
+      setWebcamStatus(e.target.checked);
     }
   };
 
@@ -69,9 +67,9 @@ function Home() {
     }
   };
 
-  const onSetPosition = (position) => {
+  const onSetPosition = (e) => {
     if (state.selectedDevice) {
-      peerManager.setCameraPosition(position);
+      setSelectedPosition(e.target.value);
     }
   };
 
@@ -98,22 +96,45 @@ function Home() {
 
   const onScenceSelect = (scence) => {
     setSelectedGraphicContainer(scence.key);
-    if (state.selectedDevice) {
-      var src = "";
-      switch (scence.key) {
-        case "starting":
-          src = "overlay.mp4";
-          break;
-        case "ending":
-          src = "overlay3.mp4";
-          break;
-        case "break":
-          src = "overlay2.mp4";
-          break;
-      }
-      peerManager.selectScence(scence.key, src);
+    switch (scence.key) {
+      case "starting":
+      case "ending":
+      case "break":
+        peerManager.selectScence(scence.key, graphics[scence.key]);
+        break;
+      default:
+        peerManager.selectScence(scence.key, "");
+        break;
     }
   };
+
+
+  const onSelectCredit = (event) => {
+    if (state.selectedDevice) {
+      setGraphics(() => ({
+        ...graphics,
+        [selectedGraphicContainer]: event.target.value,
+      }));
+      peerManager.selectScence(selectedGraphicContainer, event.target.value);
+    }
+  }
+
+  useEffect(() => {
+    if (state.selectedDevice) {
+      peerManager.setCameraPosition(selectedPosition);
+    }
+  }, [selectedPosition]);
+
+  useEffect(() => {
+    if (state.selectedDevice) {
+      if (webcamStatus) {
+        peerManager.startCamera();
+        peerManager.setCameraPosition(selectedPosition);
+      } else {
+        peerManager.stopCamera();
+      }
+    }
+  }, [webcamStatus]);
 
   useEffect(() => {
     if (Object.keys(graphics.selectedOverlay).length > 0) {
@@ -122,10 +143,11 @@ function Home() {
   }, [graphics.selectedOverlay]);
 
   useEffect(() => {
-    if (Object.keys(graphics.selectedWallpaper).length > 0) {
+    if (graphics.selectedWallpaper) {
       peerManager.setWallpaper(graphics.selectedWallpaper);
     }
   }, [graphics.selectedWallpaper]);
+
 
   useEffect(() => {
     if (state.selectedDevice) {
@@ -151,7 +173,7 @@ function Home() {
                 </div>
                 <div className="cardContent">
                   <ScenceSelector
-                    isDeviceSelected={state.selectedDevice ? true : false}
+                    value={selectedGraphicContainer}
                     onScenceSelect={onScenceSelect}
                   />
                 </div>
@@ -162,9 +184,11 @@ function Home() {
                 </div>
                 <div className="cardContent">
                   <WebcamController
-                    state={state}
-                    onStartWebCam={onStartWebCam}
-                    onStopWebCam={onStopWebCam}
+                    isDeviceSelected={state.selectedDevice}
+                    value={webcamStatus}
+                    posValue={selectedPosition}
+                    onWebCamStatusChange={onWebCamStatusChange}
+                    // onStopWebCam={onStopWebCam}
                     onSetPosition={onSetPosition}
                   />
                 </div>
@@ -175,9 +199,26 @@ function Home() {
                     <span>Wallpapers</span>
                   </div>
                   <div className="cardContent">
-                    <Wallpapers
-                      wallpapers={graphics.wallpapers}
-                      onSelectWallpaper={onSelectWallpaper}
+                    <Gallery
+                      value={graphics.selectedWallpaper}
+                      gallery={graphics.wallpapers}
+                      type="img"
+                      onSelectGalleryItem={onSelectWallpaper}
+                    />
+                  </div>
+                </div>
+              )}
+              {(selectedGraphicContainer === "starting" || selectedGraphicContainer === "ending" || selectedGraphicContainer === "break") && (
+                <div className="cardSection">
+                  <div className="cardTitle">
+                    <span>Gallery</span>
+                  </div>
+                  <div className="cardContent">
+                    <Gallery
+                      value={graphics[selectedGraphicContainer]}
+                      gallery={graphics.credits[selectedGraphicContainer]}
+                      type="video"
+                      onSelectGalleryItem={onSelectCredit}
                     />
                   </div>
                 </div>
@@ -189,6 +230,7 @@ function Home() {
                   </div>
                   <div className="cardContent">
                     <Overlays
+                      value={graphics.selectedOverlay}
                       overlays={graphics.overlays}
                       onSelectOverlay={onSelectOverlay}
                     />
@@ -208,7 +250,7 @@ function Home() {
           <div className="mainContentHeader border-bottom border-top d-flex align-items-center">
             <div className="ms-auto d-flex">
               <div className="px-3">Login</div>
-              <div className="px-3 d-flex align-items-center"><Icon type="help" className="me-1 d-inline-flex fz-16"/> <span>Help</span></div>
+              <div className="px-3"> <span>Help</span></div>
             </div>
           </div>
           <div className="subContent">
@@ -216,9 +258,6 @@ function Home() {
               <div className="streamTitle">Stream Preview</div>
               <div className="streamPlayer border-bottom">
                 <Player
-                  state={state}
-                  onStartStream={onStartStream}
-                  onStopStream={onStopStream}
                   canvasRef={canvasRef}
                 />
               </div>
@@ -240,7 +279,7 @@ function Home() {
                     <div className="siEdit ms-auto">
                       <Icon type="edit" />
                     </div> */}
-          
+
                   </div>
                   <div className="nodata">
                     No details available
@@ -306,7 +345,7 @@ function Home() {
                   <Devices
                     selectedDevice={state.selectedDevice}
                     devices={state.devices}
-                    onLoadDevice={onLoadDevice}
+                    onLoadUnloadDevice={onLoadUnloadDevice}
                   />
                 </div>
               </div>
@@ -335,15 +374,19 @@ function Home() {
           >
             Stop
           </Button> */}
-          <Button size="large" type="primary" className="me-2">
-            Go Live
-          </Button>
-          <Button size="large" type="primary" className="me-2" danger>
-            End Stream
-          </Button>
-          <Button size="large" type="default" className="record-btn">
+          {!state.streamEnabled &&
+            <Button size="large" type="primary" className="me-2" onClick={onStartStream}>
+              Go Live
+            </Button>
+          }
+          {state.streamEnabled &&
+            <Button size="large" type="primary" className="me-2" danger onClick={onStopStream}>
+              End Stream
+            </Button>
+          }
+          {/* <Button size="large" type="default" className="record-btn">
             Record
-          </Button>
+          </Button> */}
         </div>
       </div>
     </React.Fragment>
