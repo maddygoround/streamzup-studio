@@ -1,6 +1,5 @@
-import React, { useRef, useEffect } from "react";
-import { Button } from "antd";
-const Player = ({ onStopStream, onStartStream, state, canvasRef }) => {
+import React, { useRef } from "react";
+const Player = ({  canvasRef }) => {
   const canvasContainerRef = useRef(null);
   return (
     <div className="canvasPlayerContainer" ref={canvasContainerRef}>

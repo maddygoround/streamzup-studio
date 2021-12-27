@@ -4,42 +4,36 @@ import Icon from "../../icon";
 
 require("./webcam.less");
 const WebcamController = ({
-  state,
-  onStartWebCam,
+  isDeviceSelected,
+  onWebCamStatusChange,
   onSetPosition,
-  onStopWebCam,
+  value,
+  posValue
 }) => {
-  const [value, setValue] = React.useState(1);
-  function onChange(e) {
-    console.log(`checked = ${e.target.checked}`);
-  }
-  const onChangePosition = (e) => {
-    console.log("radio checked", e.target.value);
-    setValue(e.target.value);
-  };
+
   return (
     <div className="cameraSetting">
       <div className="row mb-3">
         <div className="col-lg-6">
-          <Checkbox onChange={onChange} disabled={state.selectedDevice ? false : true}>
+          <Checkbox onChange={onWebCamStatusChange} disabled={isDeviceSelected ? false : true} checked={value} defaultChecked={false}>
             <Icon type="01-webcam-on" />
             <Icon type="01-webcam-off" />
           </Checkbox>
         </div>
-        <div className="col-lg-6">
-          <Checkbox onChange={onChange} disabled={state.selectedDevice ? false : true}>
+        {/* <div className="col-lg-6">
+          <Checkbox onChange={onStopWebCam} disabled={isDeviceSelected ? false : true}>
             <Icon type="image" />
           </Checkbox>
-        </div>
+        </div> */}
       </div>
 
       <div className="camPosition">
         <div className="camTitle mb-1">Position</div>
-        <Radio.Group onChange={onChangePosition} value={value}>
-          <Radio value={1} className="top-left"></Radio>
-          <Radio value={2} className="top-right"></Radio>
-          <Radio value={3} className="bottom-left"></Radio>
-          <Radio value={4} className="bottom-right"></Radio>
+        <Radio.Group onChange={onSetPosition}  defaultValue="bottom-left" value={posValue}>
+          <Radio value="top-left" className="top-left"></Radio>
+          <Radio value="top-right" className="top-right"></Radio>
+          <Radio value="bottom-left" className="bottom-left"></Radio>
+          <Radio value="bottom-right" className="bottom-right"></Radio>
         </Radio.Group>
       </div>
       {/* <Button

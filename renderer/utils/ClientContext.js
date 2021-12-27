@@ -1,6 +1,6 @@
 import React, { useState, createContext, useEffect } from "react";
 import { ipcRenderer } from "electron";
-import { fetch } from "./fetch";
+import { fetch, fetchQR } from "./fetch";
 import Emitter from "./Emitter";
 import { PeerManager } from "./PeerManager";
 
@@ -10,17 +10,21 @@ const ClientProvider = (props) => {
     const [state, setState] = useState({
         devices: [],
         selectedDevice: undefined,
+        qrcode: undefined,
         canvasEnabled: false,
         streamEnabled: false
     });
 
-    const [peerManager,setPeerManager] = useState();
+    const [peerManager, setPeerManager] = useState();
 
     const [graphics, setGraphics] = useState({
         overlays: [],
-        wallpapers:[],
+        wallpapers: [],
         selectedOverlay: {},
-        selectedWallpaper: {}
+        selectedWallpaper: undefined,
+        starting: "overlays/starting/default.mp4",
+        ending: "overlays/ending/default.mp4",
+        break: "overlays/break/default.mp4"
     });
 
     const fetchDevices = () => {
@@ -29,8 +33,8 @@ const ClientProvider = (props) => {
         ipcRenderer.on("devices", (event, arg) => {
 
             if (!arg.length) {
-                setState(() => ({
-                    ...state
+                setState((prevState) => ({
+                    ...prevState
                 }));
             }
 
@@ -40,8 +44,8 @@ const ClientProvider = (props) => {
                 setState((prevState) => ({
                     ...prevState,
                     devices: [
-                        ...state.devices,
                         { name: element.name, selected: false, id: element.id },
+                        ...state.devices
                     ],
                 }));
 
@@ -49,15 +53,32 @@ const ClientProvider = (props) => {
         });
     };
 
+    const fetchQRCode = () => {
+        fetchQR();
+        ipcRenderer.on("qrcode", (event, arg) => {
+            if (!arg.length) {
+                setState((prevState) => ({
+                    ...prevState
+                }));
+            } else {
+                setState((prevState) => ({
+                    ...prevState,
+                    qrcode: arg
+                }));
+            }
+        });
+    };
+
 
     useEffect(() => {
         fetchDevices();
+        fetchQRCode();
         Emitter.off("canvas-status").on(
             "canvas-status",
             (arg) => {
                 if (!arg.canvasEnabled) {
-                    setState(() => ({
-                        ...state,
+                    setState((prevState) => ({
+                        ...prevState,
                         selectedDevice: undefined,
                         canvasEnabled: arg.canvasEnabled
                     }));
@@ -80,15 +101,36 @@ const ClientProvider = (props) => {
 
         setGraphics(() => ({
             ...graphics,
-            wallpapers : [
-                { url: 'images/overlays/overlay.png'},
-                { url: 'images/overlays/overlay2.png'},
-                { url: 'images/overlays/overlay3.png'},
+            wallpapers: [
+                'images/backgrounds/image1.webp',
+                'images/backgrounds/image2.webp',
+                'images/backgrounds/image3.webp',
+                'images/backgrounds/image4.webp',
             ],
+            credits: {
+                starting: [
+                    'overlays/starting/pubg.mp4',
+                    'overlays/starting/angry_bird.mp4',
+                    'overlays/starting/free.mp4',
+                    'overlays/starting/default.mp4'
+                ],
+                ending: [
+                    'overlays/ending/pubg.mp4',
+                    'overlays/ending/angry_bird.mp4',
+                    'overlays/ending/free.mp4',
+                    'overlays/ending/default.mp4'
+                ],
+                break: [
+                    'overlays/break/pubg.mp4',
+                    'overlays/break/angry_bird.mp4',
+                    'overlays/break/free.mp4',
+                    'overlays/break/default.mp4'
+                ]
+            },
             overlays: [
                 { url: 'images/overlays/overlay.png', name: 'Pink Panther', coordinates: { feed: { x: 270, y: 98, height: 1.55, width: 1.45 }, camera: { x: 21, y: 94, height: 135, width: 210 } } },
-                { url: 'images/overlays/overlay2.png', name: 'Bule Panther', coordinates: { feed: { x: 35, y: 105, height: 1.48, width: 1.45 },camera: { x: 270, y: 98, height: 1.55, width: 1.45 } }  },
-                { url: 'images/overlays/overlay4.png', name: 'Purple Panther', coordinates: { feed: { x: 25, y: 130, height: 1.8, width: 1.75 },camera: { x: 270, y: 98, height: 1.55, width: 1.45 } }  } ]
+                { url: 'images/overlays/overlay2.png', name: 'Bule Panther', coordinates: { feed: { x: 35, y: 105, height: 1.48, width: 1.45 }, camera: { x: 270, y: 98, height: 1.55, width: 1.45 } } },
+                { url: 'images/overlays/overlay4.png', name: 'Purple Panther', coordinates: { feed: { x: 25, y: 130, height: 1.8, width: 1.75 }, camera: { x: 270, y: 98, height: 1.55, width: 1.45 } } }]
         }));
 
         setPeerManager(new PeerManager());
@@ -99,7 +141,7 @@ const ClientProvider = (props) => {
             value={{
                 playback: [state, setState],
                 overlay: [graphics, setGraphics],
-                peer : [peerManager,setPeerManager]
+                peer: [peerManager, setPeerManager]
             }}
         >
             {props.children}
