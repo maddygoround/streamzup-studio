@@ -24,18 +24,18 @@ const getIPAddress = () => {
 }
 
 
-
+const port = 3001;
 const streams = store();
 const app = express();
 const httpServer = http.Server(app);
 routes(app, streams);
-httpServer.listen(3001);
+httpServer.listen(port);
 
 const io = socket(httpServer);
 pubsub(io, streams);
 
 ipcMain.on("fetchqrcode", async (event, arg) => {
-    event.sender.send("qrcode", await QRCode.toDataURL(getIPAddress()));
+    event.sender.send("qrcode", await QRCode.toDataURL(`${getIPAddress()}:${port}`));
 });
 
 ipcMain.on('fetchDevices', (event, arg) => {

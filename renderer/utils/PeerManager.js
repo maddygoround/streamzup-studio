@@ -48,16 +48,16 @@ export const PeerManager = (function () {
                 }
                 break;
             case "overlay":
+                context.fillStyle = "#000000";
+                context.fillRect(0, 0, peer.canvasEl.width, peer.canvasEl.height);
                 if (!remoteVideoEl.preview.paused && !remoteVideoEl.preview.ended) {
                     if (peer.imageEl) {
-                        context.drawImage(peer.imageEl, 0, 0, peer.canvasEl.width, peer.canvasEl.height);
-                        context.drawImage(remoteVideoEl.preview, peer.overlay.coordinates.feed.x, peer.overlay.coordinates.feed.y, peer.canvasEl.width / peer.overlay.coordinates.feed.width, (peer.canvasEl.width * videoPreviewReverseRation) / peer.overlay.coordinates.feed.height);
+                        context.drawImage(remoteVideoEl.preview, peer.overlay.coordinates.feed.x, (peer.canvasEl.height - (peer.canvasEl.width * videoPreviewReverseRation)) / 2, peer.canvasEl.width / peer.overlay.coordinates.feed.width, (peer.canvasEl.width * videoPreviewReverseRation) / peer.overlay.coordinates.feed.height);
                         if (camera.stream?.active) {
                             context.drawImage(camera.preview, peer.overlay.coordinates.camera.x, peer.overlay.coordinates.camera.y, peer.overlay.coordinates.camera.width, peer.overlay.coordinates.camera.height);
                         }
+                        context.drawImage(peer.imageEl, 0, 0, peer.canvasEl.width, peer.canvasEl.height);
                     } else {
-                        context.fillStyle = "#000000";
-                        context.fillRect(0, 0, peer.canvasEl.width, peer.canvasEl.height);
                         context.drawImage(remoteVideoEl.preview, 0, (peer.canvasEl.height - (peer.canvasEl.width * videoPreviewReverseRation)) / 2, peer.canvasEl.width, peer.canvasEl.width * videoPreviewReverseRation);
                         if (camera.stream?.active) {
                             context.drawImage(camera.preview, peer.positionX, peer.positionY, 160, 90);
@@ -281,6 +281,11 @@ export const PeerManager = (function () {
                 peer.imageEl = document.createElement('img');
             }
             peer.imageEl.src = peer.overlay.url
+            if (camera.stream) {
+                camera.stream.getTracks().forEach(function (t) {
+                    t.enabled = peer.overlay.coordinates.camera.enabled;
+                });
+            }
         },
 
         setWallpaper: (wallpaper) => {

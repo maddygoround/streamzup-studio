@@ -128,9 +128,18 @@ const ClientProvider = (props) => {
                 ]
             },
             overlays: [
-                { url: 'images/overlays/overlay.png', name: 'Pink Panther', coordinates: { feed: { x: 270, y: 98, height: 1.55, width: 1.45 }, camera: { x: 21, y: 94, height: 135, width: 210 } } },
-                { url: 'images/overlays/overlay2.png', name: 'Bule Panther', coordinates: { feed: { x: 35, y: 105, height: 1.48, width: 1.45 }, camera: { x: 270, y: 98, height: 1.55, width: 1.45 } } },
-                { url: 'images/overlays/overlay4.png', name: 'Purple Panther', coordinates: { feed: { x: 25, y: 130, height: 1.8, width: 1.75 }, camera: { x: 270, y: 98, height: 1.55, width: 1.45 } } }]
+                { url: 'images/overlays/overlay_t.png', name: 'Purple Panther', coordinates: { feed: { x: 0, y: 40, height: 1, width: 1 }, camera: { enabled: true, x: 654, y: 58, height: 81, width: 154 } } },
+                { url: 'images/overlays/overlay_t2.png', name: 'Purple Panther', coordinates: { feed: { x: 0, y: 40, height: 1, width: 1 }, camera: { enabled: true, x: 0, y: 178, height: 145, width: 170 } } },
+                { url: 'images/overlays/overlay_t3.png', name: 'Purple Panther', coordinates: { feed: { x: 0, y: 40, height: 1, width: 1 }, camera: { enabled: false} } },
+                { url: 'images/overlays/overlay_t4.png', name: 'Purple Panther', coordinates: { feed: { x: 0, y: 40, height: 1, width: 1 }, camera: { enabled: false} } },
+                { url: 'images/overlays/overlay_t5.png', name: 'Purple Panther', coordinates: { feed: { x: 0, y: 40, height: 1, width: 1 }, camera: { enabled: false} } },
+                { url: 'images/overlays/overlay_t6.png', name: 'Purple Panther', coordinates: { feed: { x: 0, y: 40, height: 1, width: 1 }, camera: { enabled: true, x: 0, y: 335, height: 90, width: 160 } } },
+                { url: 'images/overlays/overlay_t7.png', name: 'Purple Panther', coordinates: { feed: { x: 0, y: 40, height: 1, width: 1 }, camera: { enabled: false} } },
+                { url: 'images/overlays/overlay_t8.png', name: 'Purple Panther', coordinates: { feed: { x: 0, y: 40, height: 1, width: 1 }, camera: {enabled: true, x: 20, y: 330, height: 113, width: 190 } } },
+                { url: 'images/overlays/overlay_t9.png', name: 'Purple Panther', coordinates: { feed: { x: 0, y: 40, height: 1, width: 1 }, camera: { enabled: false} } },
+                { url: 'images/overlays/overlay_t10.png', name: 'Purple Panther', coordinates: { feed: { x: 0, y: 40, height: 1, width: 1 }, camera: { enabled: false} } },
+                { url: 'images/overlays/overlay_t11.png', name: 'Purple Panther', coordinates: { feed: { x: 0, y: 40, height: 1, width: 1 }, camera: { enabled: true , x: 20, y: 355, height: 90, width: 160 } } },
+                { url: 'images/overlays/overlay_t12.png', name: 'Purple Panther', coordinates: { feed: { x: 0, y: 40, height: 1, width: 1 }, camera: { enabled: true, x: 630, y: 5, height: 110, width: 210 }  } }]
         }));
 
         setPeerManager(new PeerManager());

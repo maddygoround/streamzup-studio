@@ -22,10 +22,10 @@ const QualityController = ({ isDeviceSelected, onQualitySelect }) => {
             className="w-100"
             size="large"
           >
-            <Option value={2500000}>Ultra max</Option>
-            <Option value={1200000}>Max</Option>
-            <Option value={750000}>Balanced</Option>
-            <Option value={450000}>Performance</Option>
+            <Option value={12500000}>Ultra max</Option>
+            <Option value={3200000}>Max</Option>
+            <Option value={1750000}>Balanced</Option>
+            <Option value={750000}>Performance</Option>
           </Select>
         </div>
         <div className="cardContentSubTitle mb-1">Frame Per Seconds</div>
