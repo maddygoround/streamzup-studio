@@ -128,19 +128,35 @@ const ClientProvider = (props) => {
                 ]
             },
             overlays: [
-                { url: 'images/overlays/overlay_t.png', name: 'Purple Panther', coordinates: { feed: { x: 0, y: 40, height: 1, width: 1 }, camera: { enabled: true, x: 654, y: 58, height: 81, width: 154 } } },
-                { url: 'images/overlays/overlay_t2.png', name: 'Purple Panther', coordinates: { feed: { x: 0, y: 40, height: 1, width: 1 }, camera: { enabled: true, x: 0, y: 178, height: 145, width: 170 } } },
-                { url: 'images/overlays/overlay_t3.png', name: 'Purple Panther', coordinates: { feed: { x: 0, y: 40, height: 1, width: 1 }, camera: { enabled: false} } },
-                { url: 'images/overlays/overlay_t4.png', name: 'Purple Panther', coordinates: { feed: { x: 0, y: 40, height: 1, width: 1 }, camera: { enabled: false} } },
-                { url: 'images/overlays/overlay_t5.png', name: 'Purple Panther', coordinates: { feed: { x: 0, y: 40, height: 1, width: 1 }, camera: { enabled: false} } },
-                { url: 'images/overlays/overlay_t6.png', name: 'Purple Panther', coordinates: { feed: { x: 0, y: 40, height: 1, width: 1 }, camera: { enabled: true, x: 0, y: 335, height: 90, width: 160 } } },
-                { url: 'images/overlays/overlay_t7.png', name: 'Purple Panther', coordinates: { feed: { x: 0, y: 40, height: 1, width: 1 }, camera: { enabled: false} } },
-                { url: 'images/overlays/overlay_t8.png', name: 'Purple Panther', coordinates: { feed: { x: 0, y: 40, height: 1, width: 1 }, camera: {enabled: true, x: 20, y: 330, height: 113, width: 190 } } },
-                { url: 'images/overlays/overlay_t9.png', name: 'Purple Panther', coordinates: { feed: { x: 0, y: 40, height: 1, width: 1 }, camera: { enabled: false} } },
-                { url: 'images/overlays/overlay_t10.png', name: 'Purple Panther', coordinates: { feed: { x: 0, y: 40, height: 1, width: 1 }, camera: { enabled: false} } },
-                { url: 'images/overlays/overlay_t11.png', name: 'Purple Panther', coordinates: { feed: { x: 0, y: 40, height: 1, width: 1 }, camera: { enabled: true , x: 20, y: 355, height: 90, width: 160 } } },
-                { url: 'images/overlays/overlay_t12.png', name: 'Purple Panther', coordinates: { feed: { x: 0, y: 40, height: 1, width: 1 }, camera: { enabled: true, x: 630, y: 5, height: 110, width: 210 }  } }]
-        }));
+                // { url: 'images/overlays/overlay_t.png', name: 'Purple Panther', coordinates: { feed: { x: 0, y: 40, height: 1, width: 1 }, camera: { enabled: true, x: 654, y: 58, height: 81, width: 154 } } },
+                // { url: 'images/overlays/overlay_t2.png', name: 'Purple Panther', coordinates: { feed: { x: 0, y: 40, height: 1, width: 1 }, camera: { enabled: true, x: 0, y: 178, height: 145, width: 170 } } },
+                // { url: 'images/overlays/overlay_t3.png', name: 'Purple Panther', coordinates: { feed: { x: 0, y: 40, height: 1, width: 1 }, camera: { enabled: false} } },
+                // { url: 'images/overlays/overlay_t4.png', name: 'Purple Panther', coordinates: { feed: { x: 0, y: 40, height: 1, width: 1 }, camera: { enabled: false} } },
+                // { url: 'images/overlays/overlay_t5.png', name: 'Purple Panther', coordinates: { feed: { x: 0, y: 40, height: 1, width: 1 }, camera: { enabled: false} } },
+                // { url: 'images/overlays/overlay_t6.png', name: 'Purple Panther', coordinates: { feed: { x: 0, y: 40, height: 1, width: 1 }, camera: { enabled: true, x: 0, y: 335, height: 90, width: 160 } } },
+                // { url: 'images/overlays/overlay_t7.png', name: 'Purple Panther', coordinates: { feed: { x: 0, y: 40, height: 1, width: 1 }, camera: { enabled: false} } },
+                // { url: 'images/overlays/overlay_t8.png', name: 'Purple Panther', coordinates: { feed: { x: 0, y: 40, height: 1, width: 1 }, camera: {enabled: true, x: 20, y: 330, height: 113, width: 190 } } },
+                // { url: 'images/overlays/overlay_t9.png', name: 'Purple Panther', coordinates: { feed: { x: 0, y: 40, height: 1, width: 1 }, camera: { enabled: false} } },
+                // { url: 'images/overlays/overlay_t10.png', name: 'Purple Panther', coordinates: { feed: { x: 0, y: 40, height: 1, width: 1 }, camera: { enabled: false} } },
+                // { url: 'images/overlays/overlay_t11.png', name: 'Purple Panther', coordinates: { feed: { x: 0, y: 40, height: 1, width: 1 }, camera: { enabled: true , x: 20, y: 355, height: 90, width: 160 } } },
+                // { url: 'images/overlays/overlay_t12.png', name: 'Purple Panther', coordinates: { feed: { x: 0, y: 40, height: 1, width: 1 }, camera: { enabled: true, x: 630, y: 5, height: 110, width: 210 }  } },
+                // { url: 'images/overlays/overlay_t13.png', name: 'Purple Panther', coordinates: { feed: { x: 0, y: 40, height: 1, width: 1 }, camera: { enabled: false }  } },
+                // { url: 'images/overlays/overlay_t14.png', name: 'Purple Panther', coordinates: { feed: { x: 0, y: 40, height: 1, width: 1 }, camera: { enabled: false }  } },
+                // { url: 'images/overlays/overlay_t15.png', name: 'Purple Panther', coordinates: { feed: { x: 0, y: 40, height: 1, width: 1 }, camera: { enabled: true , x: 5, y: 355, height: 86, width: 154 }   } },
+                // { url: 'images/overlays/overlay_t16.png', name: 'Purple Panther', coordinates: { feed: { x: 0, y: 40, height: 1, width: 1 }, camera: { enabled: false }  } },
+                // { url: 'images/overlays/overlay_t17.png', name: 'Purple Panther', coordinates: { feed: { x: 0, y: 40, height: 1, width: 1 }, camera: { enabled: false }  } },
+                // { url: 'images/overlays/overlay_t18.png', name: 'Purple Panther', coordinates: { feed: { x: 0, y: 40, height: 1, width: 1 }, camera: { enabled: true, x: 5, y: 290, height: 82, width: 134 }  } },
+                // { url: 'images/overlays/overlay_t19.png', name: 'Purple Panther', coordinates: { feed: { x: 0, y: 40, height: 1, width: 1 }, camera: { enabled: true, x: 670, y: 40, height: 80, width: 160 }  } },
+                { url: 'images/overlays/overlay_t20.png', name: 'Purple Panther',  border : true,coordinates: { feed: { x: 11, y: 60, height: 1.15, width: 1.35  }, camera: { enabled: true, x: 620, y: 310, height: 160, width: 210 }  } },
+                { url: 'images/overlays/overlay_t21.png', name: 'Purple Panther',  border : true,coordinates: { feed: { x: 15, y: 85, height: 1.22, width: 1.44  }, camera: { enabled: true, x: 620, y: 310, height: 160, width: 210 }  } },
+                { url: 'images/overlays/overlay_t22.png', name: 'Purple Panther',  border : true,coordinates: { feed: { x: 25, y: 55, height: 1.14, width: 1.32  }, camera: { enabled: true, x: 670, y: 310, height: 160, width: 160 }  } },
+                { url: 'images/overlays/overlay_t23.png', name: 'Purple Panther',  border : true,coordinates: { feed: { x: 15, y: 60, height: 1.1, width: 1.30  }, camera: { enabled: true, x: 670, y: 310, height: 160, width: 160 }  } },
+                { url: 'images/overlays/overlay_t24.png', name: 'Purple Panther',  border : true,coordinates: { feed: { x: 160, y: 50, height: 1.1, width: 1.28  }, camera: { enabled: true, x: 0, y: 310, height: 160, width: 160 }  } },
+                { url: 'images/overlays/overlay_t25.png', name: 'Purple Panther',  border : true,coordinates: { feed: { x: 20, y: 70, height: 1.22, width: 1.50  }, camera: { enabled: true, x: 620, y: 310, height: 140, width: 210 }  } },
+                { url: 'images/overlays/overlay_t26.png', name: 'Purple Panther',  border : true,coordinates: { feed: { x: 185, y: 65, height: 1.11, width: 1.30  }, camera: { enabled: true, x: 0, y: 295, height: 160, width: 160 }  } },
+                { url: 'images/overlays/overlay_t27.png', name: 'Purple Panther',  border : true,coordinates: { feed: { x: 15, y: 50, height: 1.1, width: 1.28  }, camera: { enabled: true, x: 670, y: 310, height: 160, width: 160 }  } },
+                { url: 'images/overlays/overlay_t28.png', name: 'Purple Panther',  border : true,coordinates: { feed: { x: 30, y: 92, height: 1.28, width: 1.49  }, camera: { enabled: true, x: 620, y: 270, height: 160, width: 210 }  } }],
+        }))
 
         setPeerManager(new PeerManager());
     }, []);

@@ -43,24 +43,35 @@ export const PeerManager = (function () {
                     }
                     context.drawImage(remoteVideoEl.preview, 0, (peer.canvasEl.height - (peer.canvasEl.width * videoPreviewReverseRation)) / 2, peer.canvasEl.width, peer.canvasEl.width * videoPreviewReverseRation);
                     if (camera.stream?.active) {
-                        context.drawImage(camera.preview, peer.positionX, peer.positionY, 160, 90);
+                        context.drawImage(camera.preview, peer.positionX, peer.positionY, 160, 120);
                     }
                 }
                 break;
             case "overlay":
-                context.fillStyle = "#000000";
-                context.fillRect(0, 0, peer.canvasEl.width, peer.canvasEl.height);
+                // context.restore();
+                // context.save();
+                context.clearRect(0, 0,  peer.canvasEl.width, peer.canvasEl.height);
                 if (!remoteVideoEl.preview.paused && !remoteVideoEl.preview.ended) {
                     if (peer.imageEl) {
-                        context.drawImage(remoteVideoEl.preview, peer.overlay.coordinates.feed.x, (peer.canvasEl.height - (peer.canvasEl.width * videoPreviewReverseRation)) / 2, peer.canvasEl.width / peer.overlay.coordinates.feed.width, (peer.canvasEl.width * videoPreviewReverseRation) / peer.overlay.coordinates.feed.height);
+                        // if(!peer.overlay.border){
+                           // context.drawImage(remoteVideoEl.preview, peer.overlay.coordinates.feed.x, peer.overlay.coordinates.feed.y ?  peer.overlay.coordinates.feed.y : (peer.canvasEl.height - (peer.canvasEl.width * videoPreviewReverseRation)) / 2, peer.canvasEl.width / peer.overlay.coordinates.feed.width, (peer.canvasEl.width * videoPreviewReverseRation) / peer.overlay.coordinates.feed.height);
+                        // }
+                        context.drawImage(remoteVideoEl.preview, peer.overlay.coordinates.feed.x, peer.overlay.coordinates.feed.y ?  peer.overlay.coordinates.feed.y : (peer.canvasEl.height - (peer.canvasEl.width * videoPreviewReverseRation)) / 2, peer.canvasEl.width / peer.overlay.coordinates.feed.width, (peer.canvasEl.width * videoPreviewReverseRation) / peer.overlay.coordinates.feed.height);
                         if (camera.stream?.active) {
                             context.drawImage(camera.preview, peer.overlay.coordinates.camera.x, peer.overlay.coordinates.camera.y, peer.overlay.coordinates.camera.width, peer.overlay.coordinates.camera.height);
                         }
                         context.drawImage(peer.imageEl, 0, 0, peer.canvasEl.width, peer.canvasEl.height);
+                       
+                        // if(peer.overlay.border){
+                        //     roundedImage(context, peer.overlay.coordinates.feed.x, peer.overlay.coordinates.feed.y ?  peer.overlay.coordinates.feed.y : (peer.canvasEl.height - (peer.canvasEl.width * videoPreviewReverseRation)) / 2, peer.canvasEl.width / peer.overlay.coordinates.feed.width, (peer.canvasEl.width * videoPreviewReverseRation) / peer.overlay.coordinates.feed.height,20);
+                        //     context.clip();
+                        //     context.drawImage(remoteVideoEl.preview, peer.overlay.coordinates.feed.x, peer.overlay.coordinates.feed.y ?  peer.overlay.coordinates.feed.y : (peer.canvasEl.height - (peer.canvasEl.width * videoPreviewReverseRation)) / 2, peer.canvasEl.width / peer.overlay.coordinates.feed.width, (peer.canvasEl.width * videoPreviewReverseRation) / peer.overlay.coordinates.feed.height);
+                        // }
+                        
                     } else {
                         context.drawImage(remoteVideoEl.preview, 0, (peer.canvasEl.height - (peer.canvasEl.width * videoPreviewReverseRation)) / 2, peer.canvasEl.width, peer.canvasEl.width * videoPreviewReverseRation);
                         if (camera.stream?.active) {
-                            context.drawImage(camera.preview, peer.positionX, peer.positionY, 160, 90);
+                            context.drawImage(camera.preview, peer.positionX, peer.positionY, 160, 120);
                         }
                     }
                 }
@@ -298,7 +309,7 @@ export const PeerManager = (function () {
         setCameraPosition: (position) => {
             switch (position) {
                 case "bottom-left":
-                    peer.positionY = (peer.canvasEl.height - 90);
+                    peer.positionY = (peer.canvasEl.height - 120);
                     peer.positionX = 0;
                     break;
                 case "top-left":
@@ -311,7 +322,7 @@ export const PeerManager = (function () {
                     break;
                 case "bottom-right":
                     peer.positionX = (peer.canvasEl.width - 160);
-                    peer.positionY = (peer.canvasEl.height - 90);
+                    peer.positionY = (peer.canvasEl.height - 120);
                     break;
             }
             peer.position = position
