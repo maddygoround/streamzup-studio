@@ -15,6 +15,10 @@ function Next() {
   return (
     <React.Fragment>
       <Head>
+        <meta
+          http-equiv="Content-Security-Policy"
+          content="script-src 'https://id.twitch.tv/';"
+        />
         <title>Next - Nextron (with-javascript-ant-design)</title>
       </Head>
 
@@ -24,12 +28,8 @@ function Next() {
         </Link>
       </Header>
 
-      <Content >
-        <Result
-          status="success"
-          title="Nextron"
-          subTitle="with Ant Design"
-        />
+      <Content>
+        <Result status="success" title="Nextron" subTitle="with Ant Design" />
       </Content>
     </React.Fragment>
   );

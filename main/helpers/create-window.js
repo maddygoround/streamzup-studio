@@ -70,6 +70,7 @@ export default function createWindow(windowName, options) {
     ...options,
     ...state,
     webPreferences: {
+      allowRunningInsecureContent: true,
       nodeIntegration: true,
       contextIsolation: false,
       ...options.webPreferences,

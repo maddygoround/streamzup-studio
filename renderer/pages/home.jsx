@@ -15,6 +15,9 @@ import Twitter from "../public/images/social/twitter.svg";
 import Youtube from "../public/images/social/youtube.svg";
 import Twitch from "../public/images/social/twitch.svg";
 import facebook from "../public/images/social/facebook.svg";
+import { useRouter } from "next/dist/client/router";
+import axios from "axios";
+
 
 require("../styles/home.less");
 
@@ -26,8 +29,13 @@ function Home() {
   const [peerManager] = peer;
   const canvasRef = useRef(null);
   const [webcamStatus, setWebcamStatus] = React.useState(false);
-  const [selectedGraphicContainer, setSelectedGraphicContainer] = useState("main");
+  const [selectedGraphicContainer, setSelectedGraphicContainer] =
+    useState("main");
   const [selectedPosition, setSelectedPosition] = useState("bottom-left");
+  const [auth,setAuth]=useState()
+  const [channels,setChannels] = useState([])
+  const router = useRouter();
+
 
   const onLoadUnloadDevice = (deviceId) => {
     if (!state.selectedDevice || state.selectedDevice !== deviceId) {
@@ -50,7 +58,6 @@ function Home() {
   const onQualitySelect = (value) => {
     peerManager.changeQuality(value);
   };
-
 
   const onWebCamStatusChange = (e) => {
     if (state.selectedDevice) {
@@ -108,7 +115,6 @@ function Home() {
     }
   };
 
-
   const onSelectCredit = (event) => {
     if (state.selectedDevice) {
       setGraphics(() => ({
@@ -117,7 +123,65 @@ function Home() {
       }));
       peerManager.selectScence(selectedGraphicContainer, event.target.value);
     }
-  }
+  };
+
+  const fetchTwitchAccessToken = (auth_code) => {
+    const url = `https://id.twitch.tv/oauth2/token?client_id=${process.env.TWITCH_CLIENT_ID}&client_secret=${process.env.TWITCH_CLIENT_SECRET}&code=${auth_code}&grant_type=authorization_code&redirect_uri=http://localhost:8888/home/&scope=user:edit%20channel:read:stream_key`;
+    axios
+      .post(url)
+      .then((response) => {
+        const { data } = response;
+        setAuth({
+          type: "twitch",
+          session: "ACTIVE",
+          accessToken: data.access_token,
+          expiresIn: new Date(new Date().getTime() + data.expires_in),
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  
+  const fetchTwitchStreamDetails = (access_token) => {
+    axios
+      .get("https://api.twitch.tv/helix/users", {
+        headers: {
+          "Authorization": `Bearer ${access_token}`,
+          "Client-Id": process.env.TWITCH_CLIENT_ID,
+        },
+      })
+      .then(async(response) => {
+        const {data:user} = response;
+        
+        const username = user.data[0].display_name;
+        const user_id = user.data[0].id;
+        const { data: stream_data } = await axios.get(
+          `https://api.twitch.tv/helix/streams/key?broadcaster_id=${user_id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${access_token}`,
+              "Client-Id": process.env.TWITCH_CLIENT_ID,
+            },
+          }
+        );
+        if(stream_data){
+         
+          const stream_key = stream_data.data[0].stream_key;
+          console.log("stream key ===>"+ stream_key);
+          setChannels((prevState) =>
+            prevState.concat({
+              type: Twitch,
+              username: username,
+              stream_key: stream_key,
+            })
+          );
+        }
+      }).catch(error=>{
+        console.log(error)
+      });
+  };
 
   useEffect(() => {
     if (state.selectedDevice) {
@@ -148,7 +212,6 @@ function Home() {
     }
   }, [graphics.selectedWallpaper]);
 
-
   useEffect(() => {
     if (state.selectedDevice) {
       peerManager.peerInit(state.selectedDevice, canvasRef);
@@ -160,6 +223,21 @@ function Home() {
       fetch();
     }, 3000);
   }, []);
+ 
+
+  // CALLED WHEN GETTING TWITCH AUTH CODE IN PARAMS 
+  useEffect(() => {
+    if (router.query && router.query.code) {
+      fetchTwitchAccessToken(router.query.code);
+    }
+  }, [router.query]);
+
+  useEffect(()=>{
+    if(auth && auth.accessToken){
+      fetchTwitchStreamDetails(auth.accessToken);
+    }
+  },[auth])
+
 
   return (
     <React.Fragment>
@@ -208,7 +286,9 @@ function Home() {
                   </div>
                 </div>
               )}
-              {(selectedGraphicContainer === "starting" || selectedGraphicContainer === "ending" || selectedGraphicContainer === "break") && (
+              {(selectedGraphicContainer === "starting" ||
+                selectedGraphicContainer === "ending" ||
+                selectedGraphicContainer === "break") && (
                 <div className="cardSection">
                   <div className="cardTitle">
                     <span>Gallery</span>
@@ -250,16 +330,17 @@ function Home() {
           <div className="mainContentHeader border-bottom border-top d-flex align-items-center">
             <div className="ms-auto d-flex">
               <div className="px-3">Login</div>
-              <div className="px-3"> <span>Help</span></div>
+              <div className="px-3">
+                {" "}
+                <span>Help</span>
+              </div>
             </div>
           </div>
           <div className="subContent">
             <div className="streamSection">
               <div className="streamTitle">Stream Preview</div>
               <div className="streamPlayer border-bottom">
-                <Player
-                  canvasRef={canvasRef}
-                />
+                <Player canvasRef={canvasRef} />
               </div>
 
               <div className="cardSection">
@@ -279,11 +360,8 @@ function Home() {
                     <div className="siEdit ms-auto">
                       <Icon type="edit" />
                     </div> */}
-
                   </div>
-                  <div className="nodata">
-                    No details available
-                  </div>
+                  <div className="nodata">No details available</div>
                 </div>
               </div>
             </div>
@@ -294,24 +372,28 @@ function Home() {
                 </div>
                 <div className="cardContent">
                   <div className=" mb-1">Channels</div>
-                  {/* <div className="mb-3 socialOnChannels customRadio">
-                    <Radio.Group
-                      onChange={onChannelsChange}
-                      value={channelsValue}
-                    >
-                      <Radio value={1}>
-                        <Image preview={false} src={YoutubeIcon} />
-                        <span className="channelName">maddygoround</span>
-                      </Radio>
-                      <Radio value={2}>
-                        <Image preview={false} src={TwitchIcon} />
-                        <span className="channelName">maddygoround</span>
-                      </Radio>
-                    </Radio.Group>
-                  </div> */}
-                  <div className="nodata mb-3">
-                    No channels available
-                  </div>
+                  {channels.length ? (
+                    <div className="mb-3 socialOnChannels customRadio">
+                      <Radio.Group
+                      // onChange={onChannelsChange}
+                      // value={channelsValue}
+                      >
+                        {channels.map((channel, index) => {
+                          return (
+                            <Radio value={1} key={index}>
+                              <Image preview={false} src={channel.type} />
+                              <span className="channelName">
+                                {channel.username}
+                              </span>
+                            </Radio>
+                          );
+                        })}
+                      </Radio.Group>
+                    </div>
+                  ) : (
+                    <div className="nodata mb-3">No channels available</div>
+                  )}
+
                   <div className=" mb-2">Options</div>
                   <ul className="list-unstyled shareSocialOnChannels">
                     <li>
@@ -325,7 +407,14 @@ function Home() {
                       </div>
                     </li>
                     <li>
-                      <div className="socialBtn">
+                      <div
+                        className="socialBtn"
+                        onClick={() =>
+                          router.push(
+                            `https://id.twitch.tv/oauth2/authorize?client_id=${process.env.TWITCH_CLIENT_ID}&redirect_uri=http://localhost:8888/home/&response_type=code&scope=user:edit%20channel:read:stream_key`
+                          )
+                        }
+                      >
                         <Image preview={false} src={Twitch} />
                       </div>
                     </li>
@@ -374,16 +463,27 @@ function Home() {
           >
             Stop
           </Button> */}
-          {!state.streamEnabled &&
-            <Button size="large" type="primary" className="me-2" onClick={onStartStream}>
+          {!state.streamEnabled && (
+            <Button
+              size="large"
+              type="primary"
+              className="me-2"
+              onClick={onStartStream}
+            >
               Go Live
             </Button>
-          }
-          {state.streamEnabled &&
-            <Button size="large" type="primary" className="me-2" danger onClick={onStopStream}>
+          )}
+          {state.streamEnabled && (
+            <Button
+              size="large"
+              type="primary"
+              className="me-2"
+              danger
+              onClick={onStopStream}
+            >
               End Stream
             </Button>
-          }
+          )}
           {/* <Button size="large" type="default" className="record-btn">
             Record
           </Button> */}
