@@ -17,6 +17,7 @@ import Twitch from "../public/images/social/twitch.svg";
 import facebook from "../public/images/social/facebook.svg";
 import { useRouter } from "next/dist/client/router";
 import axios from "axios";
+require("dotenv").config();
 
 
 require("../styles/home.less");
@@ -238,7 +239,7 @@ function Home() {
     }
   },[auth])
 
-
+  
   return (
     <React.Fragment>
       <div className="wrapper">
