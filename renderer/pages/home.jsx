@@ -35,6 +35,8 @@ function Home() {
   const [selectedPosition, setSelectedPosition] = useState("bottom-left");
   const [auth,setAuth]=useState()
   const [channels,setChannels] = useState([])
+  const [selectedChannel,setSelectedChannel] = useState('')
+  const [flag,setFlag] = useState(true)
   const router = useRouter();
 
 
@@ -91,8 +93,10 @@ function Home() {
   };
 
   const onStartStream = () => {
-    if (state.selectedDevice) {
-      peerManager.startStream(canvasRef);
+     
+    if (state.selectedDevice && state.streamUrl) {
+    
+      peerManager.startStream(canvasRef, state.streamUrl);
     }
   };
 
@@ -127,7 +131,7 @@ function Home() {
   };
 
   const fetchTwitchAccessToken = (auth_code) => {
-    const url = `https://id.twitch.tv/oauth2/token?client_id=${process.env.TWITCH_CLIENT_ID}&client_secret=${process.env.TWITCH_CLIENT_SECRET}&code=${auth_code}&grant_type=authorization_code&redirect_uri=http://localhost:8888/home/&scope=user:edit%20channel:read:stream_key`;
+    const url = `https://id.twitch.tv/oauth2/token?client_id=${process.env.TWITCH_CLIENT_ID}&client_secret=${process.env.TWITCH_CLIENT_SECRET}&code=${auth_code}&grant_type=authorization_code&redirect_uri=${process.env.TWITCH_REDIRECT_URL}&scope=user:edit%20channel:read:stream_key`;
     axios
       .post(url)
       .then((response) => {
@@ -178,12 +182,17 @@ function Home() {
               stream_key: stream_key,
             })
           );
+
         }
       }).catch(error=>{
         console.log(error)
       });
   };
 
+  const onChannelsChange=(e)=>{
+    setSelectedChannel(e.target.value);
+    setState((prevState) => ({ ...prevState, streamUrl: e.target.value }));
+  }
   useEffect(() => {
     if (state.selectedDevice) {
       peerManager.setCameraPosition(selectedPosition);
@@ -228,8 +237,9 @@ function Home() {
 
   // CALLED WHEN GETTING TWITCH AUTH CODE IN PARAMS 
   useEffect(() => {
-    if (router.query && router.query.code) {
+    if (router.query && router.query.code && flag) {
       fetchTwitchAccessToken(router.query.code);
+      setFlag(false)
     }
   }, [router.query]);
 
@@ -239,7 +249,7 @@ function Home() {
     }
   },[auth])
 
-  
+ 
   return (
     <React.Fragment>
       <div className="wrapper">
@@ -376,12 +386,17 @@ function Home() {
                   {channels.length ? (
                     <div className="mb-3 socialOnChannels customRadio">
                       <Radio.Group
-                      // onChange={onChannelsChange}
-                      // value={channelsValue}
+                        onChange={onChannelsChange}
+                        value={selectedChannel}
                       >
                         {channels.map((channel, index) => {
                           return (
-                            <Radio value={1} key={index}>
+                            <Radio
+                              value={1}
+                              key={index}
+                              name={channel.username}
+                              value={channel.stream_key}
+                            >
                               <Image preview={false} src={channel.type} />
                               <span className="channelName">
                                 {channel.username}
@@ -412,7 +427,7 @@ function Home() {
                         className="socialBtn"
                         onClick={() =>
                           router.push(
-                            `https://id.twitch.tv/oauth2/authorize?client_id=${process.env.TWITCH_CLIENT_ID}&redirect_uri=http://localhost:8888/home/&response_type=code&scope=user:edit%20channel:read:stream_key`
+                            `https://id.twitch.tv/oauth2/authorize?client_id=${process.env.TWITCH_CLIENT_ID}&redirect_uri=${process.env.TWITCH_REDIRECT_URL}&response_type=code&scope=user:edit%20channel:read:stream_key&force_verify=true`
                           )
                         }
                       >

@@ -224,41 +224,46 @@ export const PeerManager = (function () {
             qualityLevel = value;
         },
 
-        startStream: (canvasRef) => {
-            socket.emit("startstream", (status) => {
+        startStream: (canvasRef,streamUrl) => {
+            console.log("Inside PeerManager"+ streamUrl);
+            socket.emit(
+              "startstream",
+              { "streamUrl": streamUrl },
+              function (status) {
+                console.log("Function is exe with status"+ status)
                 peer.isStreaming = true;
                 if (status) {
+                  var outputStreams = [];
 
-                    var outputStreams = [];
+                  const videoOutputStream = canvasRef.current.captureStream(60); // 30 FPS
 
-                    const videoOutputStream = canvasRef.current.captureStream(60); // 30 FPS
+                  outputStreams.push(videoOutputStream);
+                  outputStreams.push(mediaSourceAudioDestinationNode.stream);
 
-                    outputStreams.push(videoOutputStream);
-                    outputStreams.push(mediaSourceAudioDestinationNode.stream)
+                  const outputStream = new MediaStream();
 
-                    const outputStream = new MediaStream();
-
-                    outputStreams.forEach(function (s) {
-                        s.getTracks().forEach(function (t) {
-                            outputStream.addTrack(t);
-                        });
+                  outputStreams.forEach(function (s) {
+                    s.getTracks().forEach(function (t) {
+                      outputStream.addTrack(t);
                     });
+                  });
 
-                    mediaRecorder = new MediaRecorder(outputStream, {
-                        mimeType: 'video/webm;codecs=h264',
-                        videoBitsPerSecond: qualityLevel
-                    });
+                  mediaRecorder = new MediaRecorder(outputStream, {
+                    mimeType: "video/webm;codecs=h264",
+                    videoBitsPerSecond: qualityLevel,
+                  });
 
-                    mediaRecorder.addEventListener('dataavailable', (e) => {
-                        socket.emit("mediadata", e.data);
-                    });
+                  mediaRecorder.addEventListener("dataavailable", (e) => {
+                    socket.emit("mediadata", e.data);
+                  });
 
-                    mediaRecorder.start(1000);
-                    Emitter.emit("stream-status", {
-                        streamEnabled: true
-                    });
+                  mediaRecorder.start(1000);
+                  Emitter.emit("stream-status", {
+                    streamEnabled: true,
+                  });
                 }
-            })
+              }
+            );
 
         },
 
