@@ -2,25 +2,25 @@ import { ipcMain } from 'electron';
 import express from 'express';
 import http from 'http';
 import socket from 'socket.io';
-import QRCode  from 'qrcode';
+import QRCode from 'qrcode';
 import routes from './routes';
 import store from './store';
 import pubsub from './pubsub';
-import { networkInterfaces } from 'os';
+import net from 'net';
 
+const getNetworkIP = () => {
+    return new Promise((resolve, reject) => {
+        var socket = net.createConnection(80, 'www.google.com');
+        socket.on('connect', function () {
+            resolve(socket.address().address);
 
-const getIPAddress = () => {
-    var interfaces = networkInterfaces();
-    for (var devName in interfaces) {
-        var iface = interfaces[devName];
+            socket.end();
+        });
+        socket.on('error', function (e) {
+            reject(e);
 
-        for (var i = 0; i < iface.length; i++) {
-            var alias = iface[i];
-            if (alias.family === 'IPv4' && alias.address !== '127.0.0.1' && !alias.internal)
-                return alias.address;
-        }
-    }
-    return '0.0.0.0';
+        });
+    })
 }
 
 
@@ -35,7 +35,7 @@ const io = socket(httpServer);
 pubsub(io, streams);
 
 ipcMain.on("fetchqrcode", async (event, arg) => {
-    event.sender.send("qrcode", await QRCode.toDataURL(`${getIPAddress()}:${port}`));
+    event.sender.send("qrcode", await QRCode.toDataURL(`${await getNetworkIP()}:${port}`));
 });
 
 ipcMain.on('fetchDevices', (event, arg) => {
